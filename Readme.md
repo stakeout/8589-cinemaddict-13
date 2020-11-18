@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Новаш](https://up.htmlacademy.ru/ecmascript/13/user/8589).
-* Наставник: `Неизвестно`.
+* Наставник: [Вадим Новаш](https://up.htmlacademy.ru/ecmascript/13/user/8589).
 
 ---
 
