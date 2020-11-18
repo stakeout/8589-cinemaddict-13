@@ -5,11 +5,20 @@
   "description": "Проект «Киноман» от HTML Academy",
   "scripts": {
     "eslint": "eslint src/**/*.js",
-    "test": "npm run eslint"
+    "test": "npm run eslint",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "devDependencies": {
+    "cross-env": "7.0.2",
+    "css-loader": "5.0.1",
     "eslint": "7.13.0",
-    "eslint-config-htmlacademy": "0.6.0"
+    "eslint-config-htmlacademy": "0.6.0",
+    "html-webpack-plugin": "4.5.0",
+    "style-loader": "2.0.0",
+    "webpack": "4.44.2",
+    "webpack-cli": "3.3.12",
+    "webpack-dev-server": "3.11.0"
   },
   "engines": {
     "node": "10"
