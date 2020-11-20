@@ -15,8 +15,13 @@ const shuffleArray = (array) => {
   return array;
 };
 
+const getRandomIndex = (array) => {
+  return array[getRandomInteger(0, array.length - 1)];
+};
+
 export {
   getRandomInteger,
   getRandomBoolean,
   shuffleArray,
+  getRandomIndex,
 };

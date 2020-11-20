@@ -12,8 +12,12 @@ import {createTopRatedTemplate} from './view/top-rated.js';
 import {createMostCommentedTemplate} from './view/most-commented.js';
 import {createFooterStatsTemplate} from './view/footer-stats.js';
 
-const CARDS_AMOUNT = 5;
+import {generateMovieObject} from './mocks/card.js';
+
+const CARDS_AMOUNT = 12;
 const CARDS_EXTRA_AMOUNT = 2;
+
+const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
@@ -33,10 +37,9 @@ render(filmsWrapper, createAllMoviesTemplate(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
 render(allMovies, createShowMoreBtnTemplate(), `beforeend`);
 
-
-for (let i = 0; i < CARDS_AMOUNT; i += 1) {
-  render(allMovies.querySelector(`.films-list__container`), createCardTemplate(), `beforeend`);
-}
+data.forEach((movie) => {
+  render(allMovies.querySelector(`.films-list__container`), createCardTemplate(movie), `beforeend`);
+});
 
 render(filmsWrapper, createTopRatedTemplate(), `beforeend`);
 render(filmsWrapper, createMostCommentedTemplate(), `beforeend`);
@@ -45,8 +48,8 @@ const topRated = filmsWrapper.querySelector(`.films-list--top-rated`);
 const mostCommented = filmsWrapper.querySelector(`.films-list--most-commented`);
 
 for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
-  render(topRated.querySelector(`.films-list__container`), createCardTemplate(), `beforeend`);
-  render(mostCommented.querySelector(`.films-list__container`), createCardTemplate(), `beforeend`);
+  render(topRated.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
+  render(mostCommented.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
 }
 
 const footerStats = document.querySelector(`.footer__statistics`);
