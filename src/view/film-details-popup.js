@@ -1,16 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-const createGenres = (genresArray) => {
-  const genreContainer = document.querySelector(`[data-type="genres"]`);
-  const genresList = genreContainer.querySelector(`.film-details__cell`);
-  const genreItem = genresList.querySelector(`.film-details__genre`);
+const createGenreTemplate = (genre) => {
+  return `<span class="film-details__genre">${genre}</span>`;
+};
 
-  const fragment = document.createDocumentFragment();
-  genresArray.forEach((genre) => {
-    const newGenre = genreItem.cloneNode(true);
-    newGenre.textContent = genre;
-    fragment.append(newGenre);
-  });
-  genreItem.replaceWith(fragment);
+const createGenres = (genresArray) => {
+  return genresArray.map(createGenreTemplate).join(``);
 };
 
 const createFilmDetailsPopupTemplate = (movieObject) => {
@@ -31,7 +24,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
   } = movieObject;
 
   const writers = screenwriters.join(`, `);
-
+  const genres = createGenres(genre);
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
@@ -85,9 +78,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
               <tr class="film-details__row" data-type="genres">
                 <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">Drama</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span>
+                  ${genres}
                 </td>
               </tr>
             </table>
