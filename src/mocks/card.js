@@ -1,4 +1,7 @@
 import {getRandomInteger, shuffleArray, getRandomIndex} from '../utils/common.js';
+import {generateComment} from './comments.js';
+
+const MAX_COMMENTS_AMOUNT = 5;
 
 const posters = [
   `made-for-each-other.png`,
@@ -59,10 +62,11 @@ const getTitlesArray = (postersArray) => {
 
 const titles = getTitlesArray(posters);
 
+
 const movieDescription = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
 
 const getRandomText = (str) => {
-  const result = shuffleArray(str.split(`. `)).slice(0, 5).join(`. `) + `.`;
+  const result = shuffleArray(str.split(`. `)).slice(0, getRandomInteger(1, str.length - 1)).join(`. `) + `.`;
   return result;
 };
 
@@ -71,6 +75,7 @@ const generateMovieObject = () => {
   const writers = shuffleArray(producers).slice(0, getRandomInteger(1, producers.length - 1));
   const ageRating = `${getRandomIndex(ages)}+`;
   const genre = shuffleArray(genres).slice(0, getRandomInteger(1, genres.length - 1));
+  const comments = new Array(getRandomInteger(0, MAX_COMMENTS_AMOUNT)).fill().map(generateComment);
 
   return {
     title: getRandomIndex(titles),
@@ -80,7 +85,7 @@ const generateMovieObject = () => {
     actors: writers,
     poster: getRandomIndex(posters),
     description: randomDesription,
-    comments: writers.length,
+    comments,
     totalRating: `${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`,
     releaseDate: 1981,
     duration: `1h 30m`,
