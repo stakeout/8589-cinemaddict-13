@@ -11,6 +11,7 @@ import {createCardTemplate} from './view/card.js';
 import {createTopRatedTemplate} from './view/top-rated.js';
 import {createMostCommentedTemplate} from './view/most-commented.js';
 import {createFooterStatsTemplate} from './view/footer-stats.js';
+import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
 
 import {generateMovieObject} from './mocks/card.js';
 
@@ -37,9 +38,12 @@ const filmsWrapper = main.querySelector(`.films`);
 render(filmsWrapper, createAllMoviesTemplate(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
 
-for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
+for (let i = 1; i <= Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   render(allMovies.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
 }
+
+render(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
+// const commentsList = document.querySelector(`.film-details__comments-list`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
   render(allMovies, createShowMoreBtnTemplate(), `beforeend`);
