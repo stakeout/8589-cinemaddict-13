@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 const createGenres = (genresArray) => {
   const genreContainer = document.querySelector(`[data-type="genres"]`);
-  // const genreTitle = genreContainer.querySelector(`.film-details__term`);
+  const genreTitle = genreContainer.querySelector(`.film-details__term`);
   const genresList = genreContainer.querySelector(`.film-details__cell`);
   const genreItem = genresList.querySelector(`.film-details__genre`);
+
+  genreTitle.textContent = (genresArray.length > 1) ? `Genres` : `Genre`;
 
   const fragment = document.createDocumentFragment();
   genresArray.forEach((genre) => {

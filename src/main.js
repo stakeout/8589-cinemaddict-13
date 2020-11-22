@@ -16,9 +16,10 @@ import {generateMovieObject} from './mocks/card.js';
 
 const CARDS_AMOUNT = 12;
 const CARDS_EXTRA_AMOUNT = 2;
+const CARDS_COUNT_PER_STEP = 5;
 
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
-
+// console.log(data);
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
@@ -35,11 +36,29 @@ render(main, createFilmsContainerTemplate(), `beforeend`);
 const filmsWrapper = main.querySelector(`.films`);
 render(filmsWrapper, createAllMoviesTemplate(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
-render(allMovies, createShowMoreBtnTemplate(), `beforeend`);
 
-data.forEach((movie) => {
-  render(allMovies.querySelector(`.films-list__container`), createCardTemplate(movie), `beforeend`);
-});
+for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
+  render(allMovies.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
+}
+
+if (data.length > CARDS_COUNT_PER_STEP) {
+  render(allMovies, createShowMoreBtnTemplate(), `beforeend`);
+  const loadMoreButton = allMovies.querySelector(`.films-list__show-more`);
+  let renderedCardCount = CARDS_COUNT_PER_STEP;
+
+  loadMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    data
+      .slice(renderedCardCount, renderedCardCount + CARDS_COUNT_PER_STEP)
+      .forEach((card) => render(allMovies.querySelector(`.films-list__container`), createCardTemplate(card), `beforeend`));
+
+    renderedCardCount += CARDS_COUNT_PER_STEP;
+
+    if (renderedCardCount >= data.length) {
+      loadMoreButton.remove();
+    }
+  });
+}
 
 render(filmsWrapper, createTopRatedTemplate(), `beforeend`);
 render(filmsWrapper, createMostCommentedTemplate(), `beforeend`);

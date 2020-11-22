@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomIndex} from '../utils/common.js';
+import {getRandomIndex} from '../utils/common.js';
 
 const authors = [
   `Vadim Novash`,
