@@ -1,4 +1,4 @@
-export const createCommentItemTemplate = (comment) => {
+const createCommentItemTemplate = (comment) => {
   const {author, emoji, dateCreation, comment: text} = comment;
   return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
@@ -15,3 +15,8 @@ export const createCommentItemTemplate = (comment) => {
   </li>`;
 };
 
+const createCommentsList = (commentsArray) => {
+  return commentsArray.map(createCommentItemTemplate).join(``);
+};
+
+export {createCommentsList};

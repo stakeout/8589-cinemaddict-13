@@ -1,3 +1,5 @@
+import {createCommentsList} from './comment.js';
+
 const createGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
@@ -25,6 +27,8 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
 
   const writers = screenwriters.join(`, `);
   const genres = createGenres(genre);
+  const commentsList = createCommentsList(comments);
+
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
@@ -105,7 +109,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
           <h3 class="film-details__comments-title">Comments
             <span class="film-details__comments-count">${comments.length}</span>
           </h3>
-          <ul class="film-details__comments-list"></ul>
+          <ul class="film-details__comments-list">${commentsList}</ul>
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
 
