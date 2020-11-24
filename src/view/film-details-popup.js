@@ -1,3 +1,4 @@
+import {dayjs} from '../utils/common.js';
 import {createCommentsList} from './comment.js';
 
 const createGenreTemplate = (genre) => {
@@ -31,6 +32,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
   const writers = screenwriters.join(`, `);
   const genres = createGenres(genre);
   const commentsList = createCommentsList(comments);
+  const formatedReleaseDate = dayjs(releaseDate).format(`DD MMMM YYYY`);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -72,7 +74,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseDate}</td>
+                <td class="film-details__cell">${formatedReleaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>

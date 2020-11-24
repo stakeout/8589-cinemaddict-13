@@ -45,7 +45,7 @@ for (let i = 1; i <= Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   render(allMovies.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
 }
 
-// render(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
+render(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
   render(allMovies, createShowMoreBtnTemplate(), `beforeend`);

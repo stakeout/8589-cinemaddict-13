@@ -69,6 +69,10 @@ const getRandomText = (str) => {
   return result;
 };
 
+const generateReleaseDate = () => {
+  return new Date(getRandomInteger(1920, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
+};
+
 const generateMovieObject = () => {
   const randomDesription = getRandomText(movieDescription);
   const writers = shuffleArray(producers).slice(0, getRandomInteger(1, producers.length - 1));
@@ -78,6 +82,7 @@ const generateMovieObject = () => {
   const isInWatchList = getRandomBoolean();
   const isWatched = getRandomBoolean();
   const isFavorite = getRandomBoolean();
+  const releaseDate = generateReleaseDate();
 
   return {
     title: getRandomIndex(titles),
@@ -89,7 +94,7 @@ const generateMovieObject = () => {
     description: randomDesription,
     comments,
     totalRating: `${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`,
-    releaseDate: 1981,
+    releaseDate,
     duration: `1h 30m`,
     genre,
     country: getRandomIndex(countries),

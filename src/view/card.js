@@ -1,3 +1,5 @@
+import {dayjs} from '../utils/common.js';
+
 const MAX_STR_LENGTH = 140;
 
 const replaceStrEndWithDots = (str) => {
@@ -20,12 +22,13 @@ export const createCardTemplate = (movieObject) => {
   } = movieObject;
 
   const descriptionText = replaceStrEndWithDots(description);
+  const formatedReleaseDate = dayjs(releaseDate).format(`YYYY`);
 
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${totalRating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${releaseDate}</span>
+      <span class="film-card__year">${formatedReleaseDate}</span>
       <span class="film-card__duration">${duration}</span>
       <span class="film-card__genre">${genre.slice(0, 1)}</span>
     </p>
