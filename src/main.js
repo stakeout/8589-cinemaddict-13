@@ -13,14 +13,17 @@ import {createMostCommentedTemplate} from './view/most-commented.js';
 import {createFooterStatsTemplate} from './view/footer-stats.js';
 import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
 
+
 import {generateMovieObject} from './mocks/card.js';
+import {generateFilter} from "./mocks/filter.js";
 
 const CARDS_AMOUNT = 12;
 const CARDS_EXTRA_AMOUNT = 2;
 const CARDS_COUNT_PER_STEP = 5;
 
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
-// console.log(data);
+const filters = generateFilter(data);
+console.log(filters);
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
@@ -29,7 +32,7 @@ render(main, createMainNavTemplate(), `beforeend`);
 
 const mainNav = main.querySelector(`.main-navigation`);
 
-render(mainNav, createFilterItemsTemplate(), `beforeend`);
+render(mainNav, createFilterItemsTemplate(filters), `beforeend`);
 render(mainNav, createStatsTemplate(), `beforeend`);
 render(main, createSortTemplate(), `beforeend`);
 render(main, createFilmsContainerTemplate(), `beforeend`);
