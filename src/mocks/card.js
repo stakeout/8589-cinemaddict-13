@@ -1,4 +1,4 @@
-import {getRandomInteger, shuffleArray, getRandomIndex} from '../utils/common.js';
+import {getRandomInteger, getRandomBoolean, shuffleArray, getRandomIndex} from '../utils/common.js';
 import {generateComment} from './comments.js';
 
 const MAX_COMMENTS_AMOUNT = 5;
@@ -75,6 +75,9 @@ const generateMovieObject = () => {
   const ageRating = `${getRandomIndex(ages)}+`;
   const genre = shuffleArray(genres).slice(0, getRandomInteger(1, genres.length - 1));
   const comments = new Array(getRandomInteger(0, MAX_COMMENTS_AMOUNT)).fill().map(generateComment);
+  const isInWatchList = getRandomBoolean();
+  const isWatched = getRandomBoolean();
+  const isFavorite = getRandomBoolean();
 
   return {
     title: getRandomIndex(titles),
@@ -91,6 +94,9 @@ const generateMovieObject = () => {
     genre,
     country: getRandomIndex(countries),
     ageRating,
+    isInWatchList,
+    isWatched,
+    isFavorite,
   };
 };
 
