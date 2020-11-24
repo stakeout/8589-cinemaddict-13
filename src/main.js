@@ -17,17 +17,18 @@ import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
 import {generateMovieObject} from './mocks/card.js';
 import {generateFilter} from "./mocks/filter.js";
 
-const CARDS_AMOUNT = 12;
+const CARDS_AMOUNT = 27;
 const CARDS_EXTRA_AMOUNT = 2;
 const CARDS_COUNT_PER_STEP = 5;
 
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
-// console.log(data);
+const historyCount = filters.find((element) => element.name === `history`).count;
+// console.log(historyCount);
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
-render(header, createProfileTemplate(), `beforeend`);
+render(header, createProfileTemplate(historyCount), `beforeend`);
 render(main, createMainNavTemplate(), `beforeend`);
 
 const mainNav = main.querySelector(`.main-navigation`);
