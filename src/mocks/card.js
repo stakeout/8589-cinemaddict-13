@@ -95,7 +95,7 @@ const generateMovieObject = () => {
     comments,
     totalRating: `${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`,
     releaseDate,
-    duration: `1h 30m`,
+    duration: getRandomInteger(24, 180),
     genre,
     country: getRandomIndex(countries),
     ageRating,

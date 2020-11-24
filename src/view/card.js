@@ -1,4 +1,4 @@
-import {dayjs} from '../utils/common.js';
+import {dayjs, formatDurationTime} from '../utils/common.js';
 
 const MAX_STR_LENGTH = 140;
 
@@ -29,7 +29,7 @@ export const createCardTemplate = (movieObject) => {
     <p class="film-card__rating">${totalRating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${formatedReleaseDate}</span>
-      <span class="film-card__duration">${duration}</span>
+      <span class="film-card__duration">${formatDurationTime(duration)}</span>
       <span class="film-card__genre">${genre.slice(0, 1)}</span>
     </p>
     <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">

@@ -1,4 +1,4 @@
-import {dayjs} from '../utils/common.js';
+import {dayjs, formatDurationTime} from '../utils/common.js';
 import {createCommentsList} from './comment.js';
 
 const createGenreTemplate = (genre) => {
@@ -78,7 +78,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${duration}</td>
+                <td class="film-details__cell">${formatDurationTime(duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>

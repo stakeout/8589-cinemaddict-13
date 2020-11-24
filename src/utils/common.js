@@ -21,10 +21,17 @@ const getRandomIndex = (array) => {
   return array[getRandomInteger(0, array.length - 1)];
 };
 
+const formatDurationTime = (durationTime) => {
+  const hours = Math.floor(durationTime / 60);
+  const minutes = durationTime % 60;
+  return (hours > 0) ? `${hours}h ${minutes}m` : `${minutes}m`;
+};
+
 export {
   getRandomInteger,
   getRandomBoolean,
   shuffleArray,
   getRandomIndex,
   dayjs,
+  formatDurationTime,
 };

@@ -23,7 +23,7 @@ const CARDS_COUNT_PER_STEP = 5;
 
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
-console.log(filters);
+// console.log(data);
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
