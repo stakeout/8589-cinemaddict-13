@@ -1,16 +1,22 @@
-export const createCommentItemTemplate = () => (
-  `<li class="film-details__comment">
+const createCommentItemTemplate = (comment) => {
+  const {author, emoji, dateCreation, comment: text} = comment;
+  return `<li class="film-details__comment">
     <span class="film-details__comment-emoji">
-      <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji-angry">
+      <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
     </span>
     <div>
-      <p class="film-details__comment-text">Almost two hours? Seriously?</p>
+      <p class="film-details__comment-text">${text}</p>
       <p class="film-details__comment-info">
-        <span class="film-details__comment-author">John Doe</span>
-        <span class="film-details__comment-day">Today</span>
+        <span class="film-details__comment-author">${author}</span>
+        <span class="film-details__comment-day">${dateCreation}</span>
         <button class="film-details__comment-delete">Delete</button>
       </p>
     </div>
-  </li>`
-);
+  </li>`;
+};
 
+const createCommentsList = (commentsArray) => {
+  return commentsArray.map(createCommentItemTemplate).join(``);
+};
+
+export {createCommentsList};
