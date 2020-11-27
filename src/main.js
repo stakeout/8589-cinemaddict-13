@@ -11,7 +11,7 @@ import CardView from './view/card.js';
 import TopRatedView from './view/top-rated.js';
 import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
-// import PopupView from './view/film-details-popup.js';
+import PopupView from './view/film-details-popup.js';
 
 
 import {generateMovieObject} from './mocks/card.js';
@@ -44,18 +44,52 @@ render(main, filmsContainerComponent.getElement(), `beforeend`);
 render(filmsContainerComponent.getElement(), AllMoviesViewComponent.getElement(), `beforeend`);
 const filmListContainer = AllMoviesViewComponent.getElement().querySelector(`.films-list__container`);
 
+const closePopup = () => {
+  const popupElement = main.querySelector(`.film-details`);
+  if (main.contains(popupElement)) {
+    main.removeChild(popupElement);
+    document.body.classList.remove(`hide-overflow`);
+    document.removeEventListener(`keydown`, popupEscPressHandler);
+  }
+};
+
+const popupEscPressHandler = (evt) => {
+  if (evt.key === `Escape` || evt.key === `Esc`) {
+    closePopup();
+  }
+};
+
+const popupCloseBtnClickHandler = () => {
+  closePopup();
+};
+
+const renderPopup = (movieId) => {
+  return () => {
+    const popupComponent = new PopupView(movieId);
+    main.appendChild(popupComponent.getElement());
+    document.body.classList.add(`hide-overflow`);
+    const closeBtn = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+    closeBtn.addEventListener(`click`, popupCloseBtnClickHandler);
+    document.addEventListener(`keydown`, popupEscPressHandler);
+  };
+};
+
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
+  const movieTitle = movieCardComponent.getElement().querySelector(`.film-card__title`);
+  const movieComments = movieCardComponent.getElement().querySelector(`.film-card__comments`);
+  const moviePoster = movieCardComponent.getElement().querySelector(`.film-card__poster`);
+
+  moviePoster.addEventListener(`click`, renderPopup(movieObject));
+  movieTitle.addEventListener(`click`, renderPopup(movieObject));
+  movieComments.addEventListener(`click`, renderPopup(movieObject));
 
   render(moviesListElement, movieCardComponent.getElement(), `beforeend`);
 };
 
-
 for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   renderMovieCard(filmListContainer, data[i]);
 }
-
-// render(document.body, new PopupView(data[0]).getElement(), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
   render(AllMoviesViewComponent.getElement(), new ShowMoreButtonView().getElement(), `beforeend`);
