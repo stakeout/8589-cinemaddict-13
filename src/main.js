@@ -1,11 +1,11 @@
-import {renderTemplate} from './utils/render.js';
+import {renderTemplate, render} from './utils/render.js';
 import {createProfileTemplate} from './view/profile.js';
 import {createMainNavTemplate} from './view/main-navigation.js';
 import {createFilterItemsTemplate} from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
 import {createSortTemplate} from './view/sort.js';
 import {createFilmsContainerTemplate} from './view/films-wrapper.js';
-import {createAllMoviesTemplate} from './view/all-movies.js';
+import MoviesView from './view/all-movies.js';
 import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
 import {createCardTemplate} from './view/card.js';
 import {createTopRatedTemplate} from './view/top-rated.js';
@@ -39,7 +39,7 @@ renderTemplate(main, createSortTemplate(), `beforeend`);
 renderTemplate(main, createFilmsContainerTemplate(), `beforeend`);
 
 const filmsWrapper = main.querySelector(`.films`);
-renderTemplate(filmsWrapper, createAllMoviesTemplate(), `beforeend`);
+render(filmsWrapper, new MoviesView().getElement(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
 
 for (let i = 1; i <= Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
