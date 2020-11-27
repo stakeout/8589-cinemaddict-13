@@ -3,7 +3,7 @@ import UserProfileView from './view/profile.js';
 import MainNavContainerView from './view/main-navigation.js';
 import FiltersView from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
-import {createSortTemplate} from './view/sort.js';
+import SortView from './view/sort.js';
 import FilmsContainerView from './view/films-wrapper.js';
 import MoviesView from './view/all-movies.js';
 import ShowMoreButtonView from './view/show-more-btn.js';
@@ -37,7 +37,7 @@ const mainNav = main.querySelector(`.main-navigation`);
 
 render(mainNav, new FiltersView(filters).getElement(), `beforeend`);
 renderTemplate(mainNav, createStatsTemplate(), `beforeend`);
-renderTemplate(main, createSortTemplate(), `beforeend`);
+render(main, new SortView().getElement(), `beforeend`);
 render(main, new FilmsContainerView().getElement(), `beforeend`);
 
 const filmsWrapper = main.querySelector(`.films`);
