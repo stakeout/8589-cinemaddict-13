@@ -1,6 +1,6 @@
 import {renderTemplate, render} from './utils/render.js';
 import {createProfileTemplate} from './view/profile.js';
-import {createMainNavTemplate} from './view/main-navigation.js';
+import MainNavContainerView from './view/main-navigation.js';
 import FiltersView from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
 import {createSortTemplate} from './view/sort.js';
@@ -31,7 +31,7 @@ const main = document.querySelector(`.main`);
 const moviesViewComponent = new MoviesView();
 
 renderTemplate(header, createProfileTemplate(historyCount), `beforeend`);
-renderTemplate(main, createMainNavTemplate(), `beforeend`);
+render(main, new MainNavContainerView().getElement(), `beforeend`);
 
 const mainNav = main.querySelector(`.main-navigation`);
 
