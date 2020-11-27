@@ -8,8 +8,8 @@ import FilmsContainerView from './view/films-wrapper.js';
 import MoviesView from './view/all-movies.js';
 import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
 import CardView from './view/card.js';
-import {createTopRatedTemplate} from './view/top-rated.js';
-import {createMostCommentedTemplate} from './view/most-commented.js';
+import TopRatedView from './view/top-rated.js';
+import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
 // import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
 
@@ -70,8 +70,8 @@ if (data.length > CARDS_COUNT_PER_STEP) {
   });
 }
 
-renderTemplate(filmsWrapper, createTopRatedTemplate(), `beforeend`);
-renderTemplate(filmsWrapper, createMostCommentedTemplate(), `beforeend`);
+render(filmsWrapper, new TopRatedView().getElement(), `beforeend`);
+render(filmsWrapper, new MostCommentedView().getElement(), `beforeend`);
 
 const topRated = filmsWrapper.querySelector(`.films-list--top-rated`);
 const mostCommented = filmsWrapper.querySelector(`.films-list--most-commented`);
