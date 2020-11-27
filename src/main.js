@@ -10,7 +10,7 @@ import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
 import CardView from './view/card.js';
 import {createTopRatedTemplate} from './view/top-rated.js';
 import {createMostCommentedTemplate} from './view/most-commented.js';
-import {createFooterStatsTemplate} from './view/footer-stats.js';
+import FooterStatsView from './view/footer-stats.js';
 // import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
 
 
@@ -82,4 +82,4 @@ for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
 }
 
 const footerStats = document.querySelector(`.footer__statistics`);
-renderTemplate(footerStats, createFooterStatsTemplate(), `beforeend`);
+render(footerStats, new FooterStatsView(data.length).getElement(), `beforeend`);
