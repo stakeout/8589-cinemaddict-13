@@ -6,7 +6,7 @@ import {createStatsTemplate} from './view/stats.js';
 import {createSortTemplate} from './view/sort.js';
 import FilmsContainerView from './view/films-wrapper.js';
 import MoviesView from './view/all-movies.js';
-import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
+import ShowMoreButtonView from './view/show-more-btn.js';
 import CardView from './view/card.js';
 import TopRatedView from './view/top-rated.js';
 import MostCommentedView from './view/most-commented.js';
@@ -52,7 +52,7 @@ for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
 // renderTemplate(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
-  renderTemplate(allMovies, createShowMoreBtnTemplate(), `beforeend`);
+  render(allMovies, new ShowMoreButtonView().getElement(), `beforeend`);
   const loadMoreButton = allMovies.querySelector(`.films-list__show-more`);
   let renderTemplateedCardCount = CARDS_COUNT_PER_STEP;
 
