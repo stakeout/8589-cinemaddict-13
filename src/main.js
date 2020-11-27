@@ -28,7 +28,8 @@ const historyCount = filters.find((element) => element.name === `history`).count
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
-const moviesViewComponent = new MoviesView();
+const filmsContainerComponent = new FilmsContainerView();
+const AllMoviesViewComponent = new MoviesView();
 
 render(header, new UserProfileView(historyCount).getElement(), `beforeend`);
 render(main, new MainNavContainerView().getElement(), `beforeend`);
@@ -38,12 +39,10 @@ const mainNav = main.querySelector(`.main-navigation`);
 render(mainNav, new FiltersView(filters).getElement(), `beforeend`);
 render(mainNav, new StatsView().getElement(), `beforeend`);
 render(main, new SortView().getElement(), `beforeend`);
-render(main, new FilmsContainerView().getElement(), `beforeend`);
+render(main, filmsContainerComponent.getElement(), `beforeend`);
 
-const filmsWrapper = main.querySelector(`.films`);
-render(filmsWrapper, moviesViewComponent.getElement(), `beforeend`);
-const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
-const filmListContainer = moviesViewComponent.getElement().querySelector(`.films-list__container`);
+render(filmsContainerComponent.getElement(), AllMoviesViewComponent.getElement(), `beforeend`);
+const filmListContainer = AllMoviesViewComponent.getElement().querySelector(`.films-list__container`);
 
 for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   render(filmListContainer, new CardView(data[i]).getElement(), `beforeend`);
@@ -52,15 +51,15 @@ for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
 // render(document.body, new PopupView(data[0]).getElement(), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
-  render(allMovies, new ShowMoreButtonView().getElement(), `beforeend`);
-  const loadMoreButton = allMovies.querySelector(`.films-list__show-more`);
+  render(AllMoviesViewComponent.getElement(), new ShowMoreButtonView().getElement(), `beforeend`);
+  const loadMoreButton = new ShowMoreButtonView().getElement();
   let renderTemplateedCardCount = CARDS_COUNT_PER_STEP;
 
   loadMoreButton.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     data
       .slice(renderTemplateedCardCount, renderTemplateedCardCount + CARDS_COUNT_PER_STEP)
-      .forEach((card) => render(allMovies.querySelector(`.films-list__container`), new CardView(card).getElement(), `beforeend`));
+      .forEach((card) => render(filmListContainer, new CardView(card).getElement(), `beforeend`));
 
     renderTemplateedCardCount += CARDS_COUNT_PER_STEP;
 
@@ -70,11 +69,11 @@ if (data.length > CARDS_COUNT_PER_STEP) {
   });
 }
 
-render(filmsWrapper, new TopRatedView().getElement(), `beforeend`);
-render(filmsWrapper, new MostCommentedView().getElement(), `beforeend`);
+render(AllMoviesViewComponent.getElement(), new TopRatedView().getElement(), `beforeend`);
+render(AllMoviesViewComponent.getElement(), new MostCommentedView().getElement(), `beforeend`);
 
-const topRated = filmsWrapper.querySelector(`.films-list--top-rated`);
-const mostCommented = filmsWrapper.querySelector(`.films-list--most-commented`);
+const topRated = AllMoviesViewComponent.getElement().querySelector(`.films-list--top-rated`);
+const mostCommented = AllMoviesViewComponent.getElement().querySelector(`.films-list--most-commented`);
 
 for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
   render(topRated.querySelector(`.films-list__container`), new CardView(data[i]).getElement(), `beforeend`);
