@@ -1,5 +1,5 @@
 import {dayjs, formatDurationTime} from '../utils/common.js';
-import {createCommentsList} from './comment.js';
+// import {createCommentsList} from './comment.js';
 
 const createGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -31,7 +31,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
 
   const writers = screenwriters.join(`, `);
   const genres = createGenres(genre);
-  const commentsList = createCommentsList(comments);
+  // const commentsList = createCommentsList(comments);
   const formatedReleaseDate = dayjs(releaseDate).format(`DD MMMM YYYY`);
 
   return `<section class="film-details">
@@ -114,7 +114,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
           <h3 class="film-details__comments-title">Comments
             <span class="film-details__comments-count">${comments.length}</span>
           </h3>
-          <ul class="film-details__comments-list">${commentsList}</ul>
+          <ul class="film-details__comments-list"></ul>
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
 

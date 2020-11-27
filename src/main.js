@@ -45,7 +45,7 @@ render(filmsWrapper, moviesViewComponent.getElement(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
 const filmListContainer = moviesViewComponent.getElement().querySelector(`.films-list__container`);
 
-for (let i = 1; i <= Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
+for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   render(filmListContainer, new CardView(data[i]).getElement(), `beforeend`);
 }
 

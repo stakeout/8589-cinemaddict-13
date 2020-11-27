@@ -1,5 +1,5 @@
-import {dayjs, formatDurationTime} from '../utils/common.js';
 import {createElement} from '../utils/render.js';
+import {dayjs, formatDurationTime} from '../utils/common.js';
 
 const MAX_STR_LENGTH = 140;
 
