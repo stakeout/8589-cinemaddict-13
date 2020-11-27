@@ -4,7 +4,7 @@ import {createMainNavTemplate} from './view/main-navigation.js';
 import {createFilterItemsTemplate} from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
 import {createSortTemplate} from './view/sort.js';
-import {createFilmsContainerTemplate} from './view/films-wrapper.js';
+import FilmsContainerView from './view/films-wrapper.js';
 import MoviesView from './view/all-movies.js';
 import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
 import CardView from './view/card.js';
@@ -38,7 +38,7 @@ const mainNav = main.querySelector(`.main-navigation`);
 renderTemplate(mainNav, createFilterItemsTemplate(filters), `beforeend`);
 renderTemplate(mainNav, createStatsTemplate(), `beforeend`);
 renderTemplate(main, createSortTemplate(), `beforeend`);
-renderTemplate(main, createFilmsContainerTemplate(), `beforeend`);
+render(main, new FilmsContainerView().getElement(), `beforeend`);
 
 const filmsWrapper = main.querySelector(`.films`);
 render(filmsWrapper, moviesViewComponent.getElement(), `beforeend`);
