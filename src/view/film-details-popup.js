@@ -1,5 +1,5 @@
+import {createElement} from '../utils/render.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
-// import {createCommentsList} from './comment.js';
 
 const createGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -150,6 +150,25 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
   </section>`;
 };
 
-export {
-  createFilmDetailsPopupTemplate,
-};
+export default class Popup {
+  constructor(movieObject) {
+    this._element = null;
+    this._movie = movieObject;
+  }
+
+  _getTemplate() {
+    return createFilmDetailsPopupTemplate(this._movie);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,4 @@
-import {renderTemplate, render} from './utils/render.js';
+import {render} from './utils/render.js';
 import UserProfileView from './view/profile.js';
 import MainNavContainerView from './view/main-navigation.js';
 import FiltersView from './view/filters.js';
@@ -11,7 +11,7 @@ import CardView from './view/card.js';
 import TopRatedView from './view/top-rated.js';
 import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
-// import {createFilmDetailsPopupTemplate} from './view/film-details-popup.js';
+// import PopupView from './view/film-details-popup.js';
 
 
 import {generateMovieObject} from './mocks/card.js';
@@ -49,7 +49,7 @@ for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
   render(filmListContainer, new CardView(data[i]).getElement(), `beforeend`);
 }
 
-// renderTemplate(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
+// render(document.body, new PopupView(data[0]).getElement(), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
   render(allMovies, new ShowMoreButtonView().getElement(), `beforeend`);
