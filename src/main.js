@@ -44,15 +44,22 @@ render(main, filmsContainerComponent.getElement(), `beforeend`);
 render(filmsContainerComponent.getElement(), AllMoviesViewComponent.getElement(), `beforeend`);
 const filmListContainer = AllMoviesViewComponent.getElement().querySelector(`.films-list__container`);
 
+const renderMovieCard = (moviesListElement, movieObject) => {
+  const movieCardComponent = new CardView(movieObject);
+
+  render(moviesListElement, movieCardComponent.getElement(), `beforeend`);
+};
+
+
 for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
-  render(filmListContainer, new CardView(data[i]).getElement(), `beforeend`);
+  renderMovieCard(filmListContainer, data[i]);
 }
 
 // render(document.body, new PopupView(data[0]).getElement(), `beforeend`);
 
 if (data.length > CARDS_COUNT_PER_STEP) {
   render(AllMoviesViewComponent.getElement(), new ShowMoreButtonView().getElement(), `beforeend`);
-  const loadMoreButton = new ShowMoreButtonView().getElement();
+  const loadMoreButton = AllMoviesViewComponent.getElement().querySelector(`.films-list__show-more`);
   let renderTemplateedCardCount = CARDS_COUNT_PER_STEP;
 
   loadMoreButton.addEventListener(`click`, (evt) => {
@@ -69,15 +76,15 @@ if (data.length > CARDS_COUNT_PER_STEP) {
   });
 }
 
-render(AllMoviesViewComponent.getElement(), new TopRatedView().getElement(), `beforeend`);
-render(AllMoviesViewComponent.getElement(), new MostCommentedView().getElement(), `beforeend`);
+render(filmsContainerComponent.getElement(), new TopRatedView().getElement(), `beforeend`);
+render(filmsContainerComponent.getElement(), new MostCommentedView().getElement(), `beforeend`);
 
-const topRated = AllMoviesViewComponent.getElement().querySelector(`.films-list--top-rated`);
-const mostCommented = AllMoviesViewComponent.getElement().querySelector(`.films-list--most-commented`);
+const topRated = filmsContainerComponent.getElement().querySelector(`.films-list--top-rated`);
+const mostCommented = filmsContainerComponent.getElement().querySelector(`.films-list--most-commented`);
 
 for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
-  render(topRated.querySelector(`.films-list__container`), new CardView(data[i]).getElement(), `beforeend`);
-  render(mostCommented.querySelector(`.films-list__container`), new CardView(data[i]).getElement(), `beforeend`);
+  renderMovieCard(topRated.querySelector(`.films-list__container`), data[i]);
+  renderMovieCard(mostCommented.querySelector(`.films-list__container`), data[i]);
 }
 
 const footerStats = document.querySelector(`.footer__statistics`);
