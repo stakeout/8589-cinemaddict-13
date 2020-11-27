@@ -1,5 +1,5 @@
 import {renderTemplate, render} from './utils/render.js';
-import {createProfileTemplate} from './view/profile.js';
+import UserProfileView from './view/profile.js';
 import MainNavContainerView from './view/main-navigation.js';
 import FiltersView from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
@@ -30,7 +30,7 @@ const main = document.querySelector(`.main`);
 
 const moviesViewComponent = new MoviesView();
 
-renderTemplate(header, createProfileTemplate(historyCount), `beforeend`);
+render(header, new UserProfileView(historyCount).getElement(), `beforeend`);
 render(main, new MainNavContainerView().getElement(), `beforeend`);
 
 const mainNav = main.querySelector(`.main-navigation`);
