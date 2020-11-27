@@ -1,7 +1,7 @@
 import {renderTemplate, render} from './utils/render.js';
 import {createProfileTemplate} from './view/profile.js';
 import {createMainNavTemplate} from './view/main-navigation.js';
-import {createFilterItemsTemplate} from './view/filters.js';
+import FiltersView from './view/filters.js';
 import {createStatsTemplate} from './view/stats.js';
 import {createSortTemplate} from './view/sort.js';
 import FilmsContainerView from './view/films-wrapper.js';
@@ -35,7 +35,7 @@ renderTemplate(main, createMainNavTemplate(), `beforeend`);
 
 const mainNav = main.querySelector(`.main-navigation`);
 
-renderTemplate(mainNav, createFilterItemsTemplate(filters), `beforeend`);
+render(mainNav, new FiltersView(filters).getElement(), `beforeend`);
 renderTemplate(mainNav, createStatsTemplate(), `beforeend`);
 renderTemplate(main, createSortTemplate(), `beforeend`);
 render(main, new FilmsContainerView().getElement(), `beforeend`);
