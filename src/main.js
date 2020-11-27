@@ -7,7 +7,7 @@ import {createSortTemplate} from './view/sort.js';
 import {createFilmsContainerTemplate} from './view/films-wrapper.js';
 import MoviesView from './view/all-movies.js';
 import {createShowMoreBtnTemplate} from './view/show-more-btn.js';
-import {createCardTemplate} from './view/card.js';
+import CardView from './view/card.js';
 import {createTopRatedTemplate} from './view/top-rated.js';
 import {createMostCommentedTemplate} from './view/most-commented.js';
 import {createFooterStatsTemplate} from './view/footer-stats.js';
@@ -28,6 +28,8 @@ const historyCount = filters.find((element) => element.name === `history`).count
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
+const moviesViewComponent = new MoviesView();
+
 renderTemplate(header, createProfileTemplate(historyCount), `beforeend`);
 renderTemplate(main, createMainNavTemplate(), `beforeend`);
 
@@ -39,11 +41,12 @@ renderTemplate(main, createSortTemplate(), `beforeend`);
 renderTemplate(main, createFilmsContainerTemplate(), `beforeend`);
 
 const filmsWrapper = main.querySelector(`.films`);
-render(filmsWrapper, new MoviesView().getElement(), `beforeend`);
+render(filmsWrapper, moviesViewComponent.getElement(), `beforeend`);
 const allMovies = filmsWrapper.querySelector(`.films-list--all-movies`);
+const filmListContainer = moviesViewComponent.getElement().querySelector(`.films-list__container`);
 
 for (let i = 1; i <= Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
-  renderTemplate(allMovies.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
+  render(filmListContainer, new CardView(data[i]).getElement(), `beforeend`);
 }
 
 // renderTemplate(document.body, createFilmDetailsPopupTemplate(data[0]), `beforeend`);
@@ -57,7 +60,7 @@ if (data.length > CARDS_COUNT_PER_STEP) {
     evt.preventDefault();
     data
       .slice(renderTemplateedCardCount, renderTemplateedCardCount + CARDS_COUNT_PER_STEP)
-      .forEach((card) => renderTemplate(allMovies.querySelector(`.films-list__container`), createCardTemplate(card), `beforeend`));
+      .forEach((card) => render(allMovies.querySelector(`.films-list__container`), new CardView(card).getElement(), `beforeend`));
 
     renderTemplateedCardCount += CARDS_COUNT_PER_STEP;
 
@@ -74,8 +77,8 @@ const topRated = filmsWrapper.querySelector(`.films-list--top-rated`);
 const mostCommented = filmsWrapper.querySelector(`.films-list--most-commented`);
 
 for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
-  renderTemplate(topRated.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
-  renderTemplate(mostCommented.querySelector(`.films-list__container`), createCardTemplate(data[i]), `beforeend`);
+  render(topRated.querySelector(`.films-list__container`), new CardView(data[i]).getElement(), `beforeend`);
+  render(mostCommented.querySelector(`.films-list__container`), new CardView(data[i]).getElement(), `beforeend`);
 }
 
 const footerStats = document.querySelector(`.footer__statistics`);
