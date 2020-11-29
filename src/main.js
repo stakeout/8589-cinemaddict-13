@@ -84,6 +84,7 @@ const renderPopup = (movie) => {
 
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
+
   const movieTitle = movieCardComponent.getElement().querySelector(`.film-card__title`);
   const movieComments = movieCardComponent.getElement().querySelector(`.film-card__comments`);
   const moviePoster = movieCardComponent.getElement().querySelector(`.film-card__poster`);
@@ -114,7 +115,7 @@ if (data.length > 0) {
       evt.preventDefault();
       data
         .slice(renderTemplateedCardCount, renderTemplateedCardCount + CARDS_COUNT_PER_STEP)
-        .forEach((card) => render(filmListContainer, new CardView(card).getElement(), RenderPosition.BEFOREEND));
+        .forEach((card) => renderMovieCard(filmListContainer, card));
 
       renderTemplateedCardCount += CARDS_COUNT_PER_STEP;
 
