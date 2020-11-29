@@ -19,18 +19,14 @@ const createCommentItemTemplate = (comment) => {
   `.trim();
 };
 
-const createCommentsListTemplate = (commentsArray) => {
-  return commentsArray.map(createCommentItemTemplate).join(``);
-};
-
-export default class Comments {
-  constructor(commentsArray) {
+export default class Comment {
+  constructor(comment) {
     this._element = null;
-    this._comments = commentsArray;
+    this._comment = comment;
   }
 
   _getTemplate() {
-    return createCommentsListTemplate(this._comments);
+    return createCommentItemTemplate(this._comment);
   }
 
   getElement() {

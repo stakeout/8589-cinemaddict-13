@@ -13,6 +13,7 @@ import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
 import PopupView from './view/film-details-popup.js';
 import NoMoviesView from './view/no-movies.js';
+import CommentView from './view/comment.js';
 
 
 import {generateMovieObject} from './mocks/card.js';
@@ -25,7 +26,7 @@ const CARDS_COUNT_PER_STEP = 5;
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
-// console.log(historyCount);
+// console.log(data);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
@@ -61,12 +62,21 @@ const popupCloseBtnClickHandler = () => {
   closePopup();
 };
 
-const renderPopup = (movieId) => {
+const renderCommentsList = (popupElement, comments) => {
+  comments.forEach((comment) => {
+    const commentComponent = new CommentView(comment);
+    render(popupElement.getElement().querySelector(`.film-details__comments-list`), commentComponent.getElement(), RenderPosition.BEFOREEND);
+  });
+};
+
+const renderPopup = (movie) => {
   return () => {
-    const popupComponent = new PopupView(movieId);
+    const popupComponent = new PopupView(movie);
     mainElement.appendChild(popupComponent.getElement());
     document.body.classList.add(`hide-overflow`);
     const closeBtn = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+
+    renderCommentsList(popupComponent, movie.comments);
     closeBtn.addEventListener(`click`, popupCloseBtnClickHandler);
     document.addEventListener(`keydown`, popupEscPressHandler);
   };
