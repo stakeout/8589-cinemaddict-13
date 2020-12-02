@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import {createElement} from '../utils/render.js';
 
 const createTopRatedTemplate = () => {
   return `
@@ -10,9 +10,24 @@ const createTopRatedTemplate = () => {
   `.trim();
 };
 
-export default class TopRated extends AbstractView {
+export default class TopRated {
+  constructor() {
+    this._element = null;
+  }
 
   _getTemplate() {
     return createTopRatedTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }

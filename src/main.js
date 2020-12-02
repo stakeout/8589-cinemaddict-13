@@ -15,6 +15,7 @@ import PopupView from './view/film-details-popup.js';
 import NoMoviesView from './view/no-movies.js';
 import CommentView from './view/comment.js';
 
+
 import {generateMovieObject} from './mocks/card.js';
 import {generateFilter} from "./mocks/filter.js";
 

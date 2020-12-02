@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import {createElement} from '../utils/render.js';
 
 const createMostCommentedTemplate = () => {
   return `
@@ -9,9 +9,24 @@ const createMostCommentedTemplate = () => {
   `.trim();
 };
 
-export default class MostCommented extends AbstractView {
+export default class MostCommented {
+  constructor() {
+    this._element = null;
+  }
 
   _getTemplate() {
     return createMostCommentedTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }

@@ -10,7 +10,7 @@ const showUserStatus = (num) => {
   }
 };
 
-import AbstractView from './abstract.js';
+import {createElement} from '../utils/render.js';
 
 const createProfileTemplate = (historyCount) => {
   const userRating = showUserStatus(historyCount);
@@ -23,13 +23,25 @@ const createProfileTemplate = (historyCount) => {
   `.trim();
 };
 
-export default class UserProfile extends AbstractView {
+export default class UserProfile {
   constructor(whatchedFilmsCount) {
-    super();
+    this._element = null;
     this._whatchedFilmsCount = whatchedFilmsCount;
   }
 
   _getTemplate() {
     return createProfileTemplate(this._whatchedFilmsCount);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this._getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }
