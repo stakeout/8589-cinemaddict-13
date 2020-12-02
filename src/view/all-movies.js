@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractView from './abstract.js';
 
 const createAllMoviesTemplate = () => {
   return `
@@ -9,24 +9,9 @@ const createAllMoviesTemplate = () => {
   `.trim();
 };
 
-export default class Movies {
-  constructor() {
-    this._element = null;
-  }
+export default class Movies extends AbstractView {
 
   _getTemplate() {
     return createAllMoviesTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
