@@ -168,13 +168,6 @@ export default class Popup {
     return this._element;
   }
 
-  getCommentsContainer() {
-    if (this._element) {
-      return this._element.querySelector(`.film-details__comments-list`);
-    }
-    return false;
-  }
-
   removeElement() {
     this._element = null;
   }
