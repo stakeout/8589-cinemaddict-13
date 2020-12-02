@@ -30,7 +30,7 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 const filmsContainerComponent = new FilmsContainerView();
-const AllMoviesComponent = new MoviesView();
+const allMoviesComponent = new MoviesView();
 const topRatedComponent = new TopRatedView();
 const mostCommentedComponent = new MostCommentedView();
 
@@ -98,20 +98,20 @@ const renderMovieCard = (moviesListElement, movieObject) => {
 if (data.length > 0) {
   render(mainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
   render(mainElement, filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
-  render(filmsContainerComponent.getElement(), AllMoviesComponent.getElement(), RenderPosition.BEFOREEND);
-  const filmListContainer = AllMoviesComponent.getElement().querySelector(`.films-list__container`);
+  render(filmsContainerComponent.getElement(), allMoviesComponent.getElement(), RenderPosition.BEFOREEND);
+  const filmListContainer = allMoviesComponent.getElement().querySelector(`.films-list__container`);
 
   for (let i = 0; i < Math.min(data.length, CARDS_COUNT_PER_STEP); i += 1) {
     renderMovieCard(filmListContainer, data[i]);
   }
 
   if (data.length > CARDS_COUNT_PER_STEP) {
-    render(AllMoviesComponent.getElement(), new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
-    const loadMoreButton = AllMoviesComponent.getElement().querySelector(`.films-list__show-more`);
+    const loadMoreButton = new ShowMoreButtonView();
+
+    render(allMoviesComponent.getElement(), loadMoreButton.getElement(), RenderPosition.BEFOREEND);
     let renderTemplateedCardCount = CARDS_COUNT_PER_STEP;
 
-    loadMoreButton.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    loadMoreButton.setClickHandler(() => {
       data
         .slice(renderTemplateedCardCount, renderTemplateedCardCount + CARDS_COUNT_PER_STEP)
         .forEach((card) => renderMovieCard(filmListContainer, card));
@@ -119,7 +119,8 @@ if (data.length > 0) {
       renderTemplateedCardCount += CARDS_COUNT_PER_STEP;
 
       if (renderTemplateedCardCount >= data.length) {
-        loadMoreButton.remove();
+        loadMoreButton.getElement().remove();
+        loadMoreButton.removeElement();
       }
     });
   }
