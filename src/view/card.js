@@ -1,5 +1,5 @@
-import {createElement} from '../utils/render.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
+import AbstractView from './abstract.js';
 
 const MAX_STR_LENGTH = 140;
 
@@ -46,25 +46,13 @@ const createCardTemplate = (movieObject) => {
   `.trim();
 };
 
-export default class Card {
+export default class Card extends AbstractView {
   constructor(cardObject) {
-    this._element = null;
+    super();
     this._card = cardObject;
   }
 
   _getTemplate() {
     return createCardTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
