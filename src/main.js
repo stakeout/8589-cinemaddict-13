@@ -25,7 +25,7 @@ const CARDS_COUNT_PER_STEP = 5;
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
-// console.log(data);
+console.log(data);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
@@ -109,16 +109,16 @@ if (data.length > 0) {
     const loadMoreButton = new ShowMoreButtonView();
 
     render(allMoviesComponent.getElement(), loadMoreButton.getElement(), RenderPosition.BEFOREEND);
-    let renderTemplateedCardCount = CARDS_COUNT_PER_STEP;
+    let renderTemplateCardCount = CARDS_COUNT_PER_STEP;
 
     loadMoreButton.setClickHandler(() => {
       data
-        .slice(renderTemplateedCardCount, renderTemplateedCardCount + CARDS_COUNT_PER_STEP)
+        .slice(renderTemplateCardCount, renderTemplateCardCount + CARDS_COUNT_PER_STEP)
         .forEach((card) => renderMovieCard(filmListContainer, card));
 
-      renderTemplateedCardCount += CARDS_COUNT_PER_STEP;
+      renderTemplateCardCount += CARDS_COUNT_PER_STEP;
 
-      if (renderTemplateedCardCount >= data.length) {
+      if (renderTemplateCardCount >= data.length) {
         loadMoreButton.getElement().remove();
         loadMoreButton.removeElement();
       }

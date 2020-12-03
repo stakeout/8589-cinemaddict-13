@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import {getRandomInteger, getRandomBoolean, shuffleArray, getRandomIndex} from '../utils/common.js';
 import {generateComment} from './comments.js';
 
@@ -85,6 +86,7 @@ const generateMovieObject = () => {
   const releaseDate = generateReleaseDate();
 
   return {
+    id: nanoid(),
     title: getRandomIndex(titles),
     originalTitle: getRandomIndex(titles),
     producer: getRandomIndex(producers),
