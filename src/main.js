@@ -25,7 +25,7 @@ const CARDS_COUNT_PER_STEP = 5;
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
-console.log(data);
+// console.log(data);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
@@ -68,29 +68,31 @@ const renderCommentsList = (popupElement, comments) => {
   });
 };
 
-const renderPopup = (movie) => {
-  return () => {
-    const popupComponent = new PopupView(movie);
-    mainElement.appendChild(popupComponent.getElement());
-    document.body.classList.add(`hide-overflow`);
-    const closeBtn = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+const getMovieCardId = ({target}) => {
+  return target.closest(`.film-card`).dataset.id;
+};
 
-    renderCommentsList(popupComponent, movie.comments);
-    closeBtn.addEventListener(`click`, popupCloseBtnClickHandler);
-    document.addEventListener(`keydown`, popupEscPressHandler);
-  };
+const renderPopup = (evt) => {
+  const id = getMovieCardId(evt);
+  const movie = data.find((elem) => elem.id === `${id}`);
+
+  const popupComponent = new PopupView(movie);
+  mainElement.appendChild(popupComponent.getElement());
+  document.body.classList.add(`hide-overflow`);
+  const closeBtn = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+
+  renderCommentsList(popupComponent, movie.comments);
+  closeBtn.addEventListener(`click`, popupCloseBtnClickHandler);
+  document.addEventListener(`keydown`, popupEscPressHandler);
+
 };
 
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
 
-  const movieTitle = movieCardComponent.getElement().querySelector(`.film-card__title`);
-  const movieComments = movieCardComponent.getElement().querySelector(`.film-card__comments`);
-  const moviePoster = movieCardComponent.getElement().querySelector(`.film-card__poster`);
-
-  moviePoster.addEventListener(`click`, renderPopup(movieObject));
-  movieTitle.addEventListener(`click`, renderPopup(movieObject));
-  movieComments.addEventListener(`click`, renderPopup(movieObject));
+  movieCardComponent.setPosterClickHandler(renderPopup);
+  movieCardComponent.setTitleClickHandler(renderPopup);
+  movieCardComponent.setCommentsClickHandler(renderPopup);
 
   render(moviesListElement, movieCardComponent.getElement(), RenderPosition.BEFOREEND);
 };

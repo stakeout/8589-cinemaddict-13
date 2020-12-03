@@ -9,6 +9,7 @@ const replaceStrEndWithDots = (str) => {
 
 const createCardTemplate = (movieObject) => {
   const {
+    id,
     title,
     poster,
     genre,
@@ -26,7 +27,7 @@ const createCardTemplate = (movieObject) => {
   const formatedReleaseDate = dayjs(releaseDate).format(`YYYY`);
 
   return `
-    <article class="film-card">
+    <article class="film-card" data-id="${id}">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${totalRating}</p>
       <p class="film-card__info">
@@ -50,9 +51,38 @@ export default class Card extends AbstractView {
   constructor(cardObject) {
     super();
     this._card = cardObject;
+    this._posterClickHandler = this._posterClickHandler.bind(this);
+    this._titleClickHandler = this._posterClickHandler.bind(this);
+    this._commentsClickHandler = this._posterClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createCardTemplate(this._card);
+  }
+
+  _posterClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.posterClick(evt);
+  }
+  _titleClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.titleClick(evt);
+  }
+  _commentsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.commentsClick(evt);
+  }
+
+  setPosterClickHandler(cb) {
+    this._callback.posterClick = cb;
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._posterClickHandler);
+  }
+  setTitleClickHandler(cb) {
+    this._callback.titleClick = cb;
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._titleClickHandler);
+  }
+  setCommentsClickHandler(cb) {
+    this._callback.commentsClick = cb;
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._commentsClickHandler);
   }
 }

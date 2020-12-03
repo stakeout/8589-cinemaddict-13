@@ -86,7 +86,7 @@ const generateMovieObject = () => {
   const releaseDate = generateReleaseDate();
 
   return {
-    id: nanoid(),
+    id: nanoid(5),
     title: getRandomIndex(titles),
     originalTitle: getRandomIndex(titles),
     producer: getRandomIndex(producers),
