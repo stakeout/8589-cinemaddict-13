@@ -25,7 +25,7 @@ const CARDS_COUNT_PER_STEP = 5;
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
-// console.log(data);
+console.log(data);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
@@ -79,11 +79,10 @@ const renderPopup = (evt) => {
   const popupComponent = new PopupView(movie);
   mainElement.appendChild(popupComponent.getElement());
   document.body.classList.add(`hide-overflow`);
-  const closeBtn = popupComponent.getElement().querySelector(`.film-details__close-btn`);
 
   renderCommentsList(popupComponent, movie.comments);
-  closeBtn.addEventListener(`click`, popupCloseBtnClickHandler);
-  document.addEventListener(`keydown`, popupEscPressHandler);
+  popupComponent.setCloseBtnClickHandler(popupCloseBtnClickHandler);
+  popupComponent.setEscPressHandler(popupEscPressHandler);
 
 };
 
