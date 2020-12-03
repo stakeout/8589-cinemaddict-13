@@ -90,9 +90,7 @@ const renderPopup = (evt) => {
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
 
-  movieCardComponent.setPosterClickHandler(renderPopup);
-  movieCardComponent.setTitleClickHandler(renderPopup);
-  movieCardComponent.setCommentsClickHandler(renderPopup);
+  movieCardComponent.setMovieCardClickHandler(renderPopup);
 
   render(moviesListElement, movieCardComponent.getElement(), RenderPosition.BEFOREEND);
 };

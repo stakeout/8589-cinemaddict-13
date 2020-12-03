@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+import {nanoid} from 'nanoid';
 import {getRandomInteger, getRandomBoolean, shuffleArray, getRandomIndex} from '../utils/common.js';
 import {generateComment} from './comments.js';
 
