@@ -25,7 +25,7 @@ const CARDS_COUNT_PER_STEP = 5;
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
-console.log(data);
+// console.log(data);
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
