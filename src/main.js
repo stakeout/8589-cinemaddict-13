@@ -61,10 +61,18 @@ const popupCloseBtnClickHandler = () => {
   closePopup();
 };
 
+const deleteComment = ({target}) => {
+  const counter = document.querySelector(`.film-details__comments-count`);
+  const commentItem = target.closest(`.film-details__comment`);
+  commentItem.remove();
+  counter.textContent -= 1;
+};
+
 const renderCommentsList = (popupElement, comments) => {
   comments.forEach((comment) => {
     const commentComponent = new CommentView(comment);
     render(popupElement.getElement().querySelector(`.film-details__comments-list`), commentComponent, RenderPosition.BEFOREEND);
+    commentComponent.setCommentDeleteHandler(deleteComment);
   });
 };
 

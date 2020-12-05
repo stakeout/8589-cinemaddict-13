@@ -23,10 +23,23 @@ export default class Comment extends AbstractView {
   constructor(comment) {
     super();
     this._comment = comment;
+    this._deleteHandler = this._deleteHandler.bind(this);
   }
 
   _getTemplate() {
     return createCommentItemTemplate(this._comment);
+  }
+
+  _deleteHandler(evt) {
+    this._callback.delete(evt);
+  }
+
+  setCommentDeleteHandler(cb) {
+    this._callback.delete = cb;
+    this.getElement()
+        .querySelector(`.film-details__comment-delete`)
+        .addEventListener(`click`, this._deleteHandler);
+    this.removeElement();
   }
 }
 
