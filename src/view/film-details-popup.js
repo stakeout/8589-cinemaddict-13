@@ -188,9 +188,14 @@ export default class Popup extends AbstractView {
   }
   _renderCommentsList() {
     const comments = this._movie.comments;
+    const counter = document.querySelector(`.film-details__comments-count`);
+    counter.textContent = comments.length;
+    const commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
+    commentsListElement.innerHTML = ``;
+
     comments.forEach((comment) => {
       const commentComponent = new CommentView(comment);
-      render(this.getElement().querySelector(`.film-details__comments-list`), commentComponent, RenderPosition.BEFOREEND);
+      render(commentsListElement, commentComponent, RenderPosition.BEFOREEND);
       commentComponent.setCommentDeleteHandler();
     });
   }

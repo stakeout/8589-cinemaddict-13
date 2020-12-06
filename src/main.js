@@ -35,7 +35,7 @@ const mainElement = document.querySelector(`.main`);
 
 const filmsContainerComponent = new FilmsContainerView();
 const allMoviesComponent = new MoviesView();
-const popupComponent = new PopupView(data);
+// const popupComponent = new PopupView(data);
 
 render(headerElement, new UserProfileView(historyCount), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavContainerView(), RenderPosition.BEFOREEND);
@@ -48,7 +48,7 @@ render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
 
-  movieCardComponent.setMovieCardClickHandler(popupComponent.init);
+  movieCardComponent.setMovieCardClickHandler(new PopupView(data).init);
 
   render(moviesListElement, movieCardComponent, RenderPosition.BEFOREEND);
 };
