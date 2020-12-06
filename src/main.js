@@ -13,7 +13,6 @@ import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
 import PopupView from './view/film-details-popup.js';
 import NoMoviesView from './view/no-movies.js';
-import CommentView from './view/comment.js';
 
 import {generateMovieObject} from './mocks/card.js';
 import {generateFilter} from "./mocks/filter.js";
@@ -45,21 +44,6 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 
 render(mainNav, new FiltersView(filters), RenderPosition.BEFOREEND);
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
-
-const deleteComment = ({target}) => {
-  const counter = document.querySelector(`.film-details__comments-count`);
-  const commentItem = target.closest(`.film-details__comment`);
-  commentItem.remove();
-  counter.textContent -= 1;
-};
-
-const renderCommentsList = (popupElement, comments) => {
-  comments.forEach((comment) => {
-    const commentComponent = new CommentView(comment);
-    render(popupElement.getElement().querySelector(`.film-details__comments-list`), commentComponent, RenderPosition.BEFOREEND);
-    commentComponent.setCommentDeleteHandler(deleteComment);
-  });
-};
 
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);

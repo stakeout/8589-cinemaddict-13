@@ -1,6 +1,7 @@
 import AbstractView from './abstract.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
 import {render, RenderPosition} from '../utils/render.js';
+import CommentView from './comment.js';
 
 const mainElement = document.querySelector(`.main`);
 
@@ -185,9 +186,15 @@ export default class Popup extends AbstractView {
   _getCloseBtn() {
     return this.getElement().querySelector(`.film-details__close-btn`);
   }
+  _renderCommentsList() {
+    const comments = this._movie.comments;
+    comments.forEach((comment) => {
+      const commentComponent = new CommentView(comment);
+      render(this.getElement().querySelector(`.film-details__comments-list`), commentComponent, RenderPosition.BEFOREEND);
+      commentComponent.setCommentDeleteHandler();
+    });
+  }
   _renderPopup({target}) {
-    const id = target.closest(`.film-card`).dataset.id;
-    this._movie = this._data.find((elem) => elem.id === `${id}`);
     const isPopup = mainElement.querySelector(`.film-details`);
 
     if (mainElement.contains(isPopup)) {
@@ -195,10 +202,14 @@ export default class Popup extends AbstractView {
       this.removeElement();
     }
 
+    const id = target.closest(`.film-card`).dataset.id;
+    this._movie = this._data.find((elem) => elem.id === `${id}`);
+
     mainElement.appendChild(this.getElement());
     document.body.classList.add(`hide-overflow`);
 
-    // renderCommentsList(popupComponent, movie.comments);
+
+    this._renderCommentsList();
     this._getCloseBtn().addEventListener(`click`, this._closeBtnClickHandler);
     document.addEventListener(`keydown`, this._escHandler);
   }
