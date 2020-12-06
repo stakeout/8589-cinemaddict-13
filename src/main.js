@@ -5,9 +5,9 @@ import FiltersView from './view/filters.js';
 import StatsView from './view/stats.js';
 import SortView from './view/sort.js';
 import FilmsContainerView from './view/films-wrapper.js';
+import CardView from './view/card.js';
 import MoviesView from './view/all-movies.js';
 import ShowMoreButtonView from './view/show-more-btn.js';
-import CardView from './view/card.js';
 import TopRatedView from './view/top-rated.js';
 import MostCommentedView from './view/most-commented.js';
 import FooterStatsView from './view/footer-stats.js';
@@ -26,13 +26,17 @@ const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
 // console.log(data);
+
+// additional sections
+const isCommentedMovies = data.some((movie) => movie.comments.length > 0);
+const isRatedMovies = data.some((movie) => movie.totalRating > 0);
+
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 const filmsContainerComponent = new FilmsContainerView();
 const allMoviesComponent = new MoviesView();
-const topRatedComponent = new TopRatedView();
-const mostCommentedComponent = new MostCommentedView();
+const popupComponent = new PopupView(data);
 
 render(headerElement, new UserProfileView(historyCount), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavContainerView(), RenderPosition.BEFOREEND);
@@ -41,25 +45,6 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 
 render(mainNav, new FiltersView(filters), RenderPosition.BEFOREEND);
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
-
-const closePopup = () => {
-  const popupElement = mainElement.querySelector(`.film-details`);
-  if (mainElement.contains(popupElement)) {
-    mainElement.removeChild(popupElement);
-  }
-  document.body.classList.remove(`hide-overflow`);
-  document.removeEventListener(`keydown`, popupEscPressHandler);
-};
-
-const popupEscPressHandler = (evt) => {
-  if (evt.key === `Escape` || evt.key === `Esc`) {
-    closePopup();
-  }
-};
-
-const popupCloseBtnClickHandler = () => {
-  closePopup();
-};
 
 const deleteComment = ({target}) => {
   const counter = document.querySelector(`.film-details__comments-count`);
@@ -76,35 +61,10 @@ const renderCommentsList = (popupElement, comments) => {
   });
 };
 
-const getMovieCardId = ({target}) => {
-  return target.closest(`.film-card`).dataset.id;
-};
-
-const renderPopup = (evt) => {
-  const id = getMovieCardId(evt);
-  const movie = data.find((elem) => elem.id === `${id}`);
-  const popupComponent = new PopupView(movie);
-  const isPopup = mainElement.querySelector(`.film-details`);
-
-  if (mainElement.contains(isPopup)) {
-    mainElement.removeChild(isPopup);
-    popupComponent.removeElement();
-  }
-
-
-  mainElement.appendChild(popupComponent.getElement());
-  document.body.classList.add(`hide-overflow`);
-
-  renderCommentsList(popupComponent, movie.comments);
-  popupComponent.setCloseBtnClickHandler(popupCloseBtnClickHandler);
-  popupComponent.setEscPressHandler(popupEscPressHandler);
-
-};
-
 const renderMovieCard = (moviesListElement, movieObject) => {
   const movieCardComponent = new CardView(movieObject);
 
-  movieCardComponent.setMovieCardClickHandler(renderPopup);
+  movieCardComponent.setMovieCardClickHandler(popupComponent.init);
 
   render(moviesListElement, movieCardComponent, RenderPosition.BEFOREEND);
 };
@@ -139,13 +99,24 @@ if (data.length > 0) {
     });
   }
 
-  render(filmsContainerComponent, topRatedComponent, RenderPosition.BEFOREEND);
-  render(filmsContainerComponent, mostCommentedComponent, RenderPosition.BEFOREEND);
+  if (isRatedMovies) {
+    const topRatedComponent = new TopRatedView(data);
+    render(filmsContainerComponent, topRatedComponent, RenderPosition.BEFOREEND);
+    for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
+      renderMovieCard(topRatedComponent.getElement().querySelector(`.films-list__container`), data[i]);
+    }
 
-  for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
-    renderMovieCard(topRatedComponent.getElement().querySelector(`.films-list__container`), data[i]);
-    renderMovieCard(mostCommentedComponent.getElement().querySelector(`.films-list__container`), data[i]);
   }
+  if (isCommentedMovies) {
+    const moviesWithComments = data.filter((movie) => movie.comments.length > 0);
+    const mostCommentedComponent = new MostCommentedView(moviesWithComments);
+    render(filmsContainerComponent, mostCommentedComponent, RenderPosition.BEFOREEND);
+
+    for (let i = 0; i < CARDS_EXTRA_AMOUNT; i += 1) {
+      renderMovieCard(mostCommentedComponent.getElement().querySelector(`.films-list__container`), data[i]);
+    }
+  }
+
 } else {
   render(mainElement, filmsContainerComponent, RenderPosition.BEFOREEND);
   render(filmsContainerComponent, new NoMoviesView(), RenderPosition.BEFOREEND);

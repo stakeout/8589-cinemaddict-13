@@ -1,5 +1,8 @@
 import AbstractView from './abstract.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
+import {render, RenderPosition} from '../utils/render.js';
+
+const mainElement = document.querySelector(`.main`);
 
 const createGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -152,31 +155,55 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
 };
 
 export default class Popup extends AbstractView {
-  constructor(movieObject) {
+  constructor(data) {
     super();
-    this._movie = movieObject;
+    this._data = data.slice();
     this._escHandler = this._escHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
+    this.init = this.init.bind(this);
   }
 
   _getTemplate() {
     return createFilmDetailsPopupTemplate(this._movie);
   }
-
+  _closePopup() {
+    const popupElement = mainElement.querySelector(`.film-details`);
+    if (mainElement.contains(popupElement)) {
+      mainElement.removeChild(popupElement);
+    }
+    document.body.classList.remove(`hide-overflow`);
+    document.removeEventListener(`keydown`, this._escHandler);
+  }
   _escHandler(evt) {
-    this._callback.esc(evt);
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      this._closePopup();
+    }
   }
-  _closeBtnClickHandler(evt) {
-    this._callback.click(evt);
+  _closeBtnClickHandler() {
+    this._closePopup();
   }
+  _getCloseBtn() {
+    return this.getElement().querySelector(`.film-details__close-btn`);
+  }
+  _renderPopup({target}) {
+    const id = target.closest(`.film-card`).dataset.id;
+    this._movie = this._data.find((elem) => elem.id === `${id}`);
+    const isPopup = mainElement.querySelector(`.film-details`);
 
-  setEscPressHandler(cb) {
-    this._callback.esc = cb;
+    if (mainElement.contains(isPopup)) {
+      mainElement.removeChild(isPopup);
+      this.removeElement();
+    }
+
+    mainElement.appendChild(this.getElement());
+    document.body.classList.add(`hide-overflow`);
+
+    // renderCommentsList(popupComponent, movie.comments);
+    this._getCloseBtn().addEventListener(`click`, this._closeBtnClickHandler);
     document.addEventListener(`keydown`, this._escHandler);
   }
 
-  setCloseBtnClickHandler(cb) {
-    this._callback.click = cb;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
+  init(evt) {
+    this._renderPopup(evt);
   }
 }
