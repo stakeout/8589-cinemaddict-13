@@ -1,4 +1,13 @@
 import Abstract from '../view/abstract.js';
+import CardView from '../view/card.js';
+
+// const renderMovieCard = (moviesListElement, movieObject) => {
+//   const movieCardComponent = new CardView(movieObject);
+
+//   movieCardComponent.setMovieCardClickHandler(renderPopup);
+
+//   render(moviesListElement, movieCardComponent, RenderPosition.BEFOREEND);
+// };
 
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
@@ -35,7 +44,6 @@ const createElement = (template) => {
 
   return newElement.firstChild;
 };
-
 
 export {
   renderTemplate,

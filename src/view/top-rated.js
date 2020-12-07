@@ -11,7 +11,10 @@ const createTopRatedTemplate = () => {
 };
 
 export default class TopRated extends AbstractView {
-
+  constructor(data) {
+    super();
+    this._data = data.slice();
+  }
   _getTemplate() {
     return createTopRatedTemplate();
   }

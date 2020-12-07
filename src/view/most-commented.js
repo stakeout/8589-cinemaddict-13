@@ -10,7 +10,14 @@ const createMostCommentedTemplate = () => {
 };
 
 export default class MostCommented extends AbstractView {
-
+  constructor(data) {
+    super();
+    this._data = data.slice();
+  }
+  _getSortedData() {
+    const moviesSortedByCommentsCount = this._data.sort((a, b) => b.comments.length - a.comments.length);
+    return moviesSortedByCommentsCount;
+  }
   _getTemplate() {
     return createMostCommentedTemplate();
   }
