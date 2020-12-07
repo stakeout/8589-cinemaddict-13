@@ -1,4 +1,5 @@
-import {getRandomInteger, getRandomBoolean, shuffleArray, getRandomIndex} from '../utils/common.js';
+import {nanoid} from 'nanoid';
+import {dayjs, getRandomInteger, getRandomBoolean, shuffleArray, getRandomIndex} from '../utils/common.js';
 import {generateComment} from './comments.js';
 
 const MAX_COMMENTS_AMOUNT = 5;
@@ -69,10 +70,6 @@ const getRandomText = (str) => {
   return result;
 };
 
-const generateReleaseDate = () => {
-  return new Date(getRandomInteger(1920, 2020), getRandomInteger(0, 11), getRandomInteger(1, 31));
-};
-
 const generateMovieObject = () => {
   const randomDesription = getRandomText(movieDescription);
   const writers = shuffleArray(producers).slice(0, getRandomInteger(1, producers.length - 1));
@@ -82,9 +79,10 @@ const generateMovieObject = () => {
   const isInWatchList = getRandomBoolean();
   const isWatched = getRandomBoolean();
   const isFavorite = getRandomBoolean();
-  const releaseDate = generateReleaseDate();
+  const releaseDate = dayjs.past(20);
 
   return {
+    id: nanoid(5),
     title: getRandomIndex(titles),
     originalTitle: getRandomIndex(titles),
     producer: getRandomIndex(producers),

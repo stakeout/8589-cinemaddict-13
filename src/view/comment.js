@@ -1,4 +1,4 @@
-import {createElement} from '../utils/render.js';
+import AbstractView from './abstract.js';
 
 const createCommentItemTemplate = (comment) => {
   const {author, emoji, dateCreation, comment: text} = comment;
@@ -19,26 +19,30 @@ const createCommentItemTemplate = (comment) => {
   `.trim();
 };
 
-export default class Comment {
+export default class Comment extends AbstractView {
   constructor(comment) {
-    this._element = null;
+    super();
     this._comment = comment;
+    this._deleteHandler = this._deleteHandler.bind(this);
   }
 
   _getTemplate() {
     return createCommentItemTemplate(this._comment);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this._getTemplate());
-    }
-
-    return this._element;
+  _deleteHandler({target}) {
+    const counter = document.querySelector(`.film-details__comments-count`);
+    const commentItem = target.closest(`.film-details__comment`);
+    commentItem.remove();
+    counter.textContent -= 1;
   }
 
-  removeElement() {
-    this._element = null;
+  setCommentDeleteHandler() {
+    // this._callback.delete = cb;
+    this.getElement()
+        .querySelector(`.film-details__comment-delete`)
+        .addEventListener(`click`, this._deleteHandler);
+    this.removeElement();
   }
 }
 

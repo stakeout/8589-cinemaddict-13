@@ -1,4 +1,4 @@
-import {getRandomIndex} from '../utils/common.js';
+import {dayjs, getRandomIndex} from '../utils/common.js';
 
 const authors = [
   `Vadim Novash`,
@@ -27,12 +27,13 @@ const generateComment = () => {
   const author = getRandomIndex(authors);
   const emoji = getRandomIndex(emojies);
   const comment = getRandomIndex(comments);
+  const dateCreation = dayjs.recent(3).fromNow();
 
   return {
     author,
     emoji,
     comment,
-    dateCreation: ``,
+    dateCreation,
   };
 };
 

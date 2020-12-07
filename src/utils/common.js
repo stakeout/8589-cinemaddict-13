@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import dayjsRandom from 'dayjs-random';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(dayjsRandom).extend(relativeTime);
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
