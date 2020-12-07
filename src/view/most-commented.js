@@ -14,7 +14,7 @@ export default class MostCommented extends AbstractView {
     super();
     this._data = data.slice();
   }
-  _getSortedData() {
+  getSortedData() {
     const moviesSortedByCommentsCount = this._data.sort((a, b) => b.comments.length - a.comments.length);
     return moviesSortedByCommentsCount;
   }

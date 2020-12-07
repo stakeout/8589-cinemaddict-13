@@ -91,7 +91,7 @@ const generateMovieObject = () => {
     poster: getRandomIndex(posters),
     description: randomDesription,
     comments,
-    totalRating: `${getRandomInteger(0, 9)}.${getRandomInteger(0, 9)}`,
+    totalRating: 0,
     releaseDate,
     duration: getRandomInteger(24, 180),
     genre,
