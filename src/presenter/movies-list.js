@@ -5,7 +5,7 @@ import AllMoviesView from '../view/all-movies.js';
 import MovieView from '../view/card.js';
 import ShowMoreButtonView from '../view/show-more-btn.js';
 import NoMoviesView from '../view/no-movies.js';
-// import PopupView from '../view/film-details-popup.js';
+import PopupView from '../view/film-details-popup.js';
 
 import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
@@ -30,8 +30,9 @@ export default class MoviesList {
 
   _renderMovieCard(container, movie) {
     const movieComponent = new MovieView(movie);
-    // const popupComponent = new PopupView(movie);
+    const popupComponent = new PopupView(movie);
 
+    movieComponent.setMovieCardClickHandler(popupComponent.renderPopup.bind(popupComponent));
     render(container.querySelector(`.films-list__container`), movieComponent, RenderPosition.BEFOREEND);
   }
 

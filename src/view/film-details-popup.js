@@ -155,12 +155,11 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
 };
 
 export default class Popup extends AbstractView {
-  constructor(data) {
+  constructor(movie) {
     super();
-    this._data = data.slice();
+    this._movie = movie;
     this._escHandler = this._escHandler.bind(this);
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
-    this.init = this.init.bind(this);
   }
 
   _getTemplate() {
@@ -198,27 +197,14 @@ export default class Popup extends AbstractView {
       commentComponent.setCommentDeleteHandler();
     });
   }
-  _renderPopup({target}) {
-    const isPopup = mainElement.querySelector(`.film-details`);
+  renderPopup() {
+    const popupElement = this.getElement();
 
-    if (mainElement.contains(isPopup)) {
-      mainElement.removeChild(isPopup);
-      this.removeElement();
-    }
-
-    const id = target.closest(`.film-card`).dataset.id;
-    this._movie = this._data.find((elem) => elem.id === `${id}`);
-
-    mainElement.appendChild(this.getElement());
+    mainElement.appendChild(popupElement);
     document.body.classList.add(`hide-overflow`);
-
 
     this._renderCommentsList();
     this._getCloseBtn().addEventListener(`click`, this._closeBtnClickHandler);
     document.addEventListener(`keydown`, this._escHandler);
-  }
-
-  init(evt) {
-    this._renderPopup(evt);
   }
 }
