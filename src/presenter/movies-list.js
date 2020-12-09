@@ -2,13 +2,15 @@ import {render, RenderPosition} from '../utils/render.js';
 import SortView from '../view/sort.js';
 import FilmsContainerView from '../view/films-wrapper.js';
 import AllMoviesView from '../view/all-movies.js';
-import MovieView from '../view/card.js';
+// import MovieView from '../view/card.js';
 import ShowMoreButtonView from '../view/show-more-btn.js';
 import NoMoviesView from '../view/no-movies.js';
-import PopupView from '../view/film-details-popup.js';
+// import PopupView from '../view/film-details-popup.js';
 
 import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
+
+import MoviePresenter from './movie.js';
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
@@ -32,11 +34,7 @@ export default class MoviesList {
   }
 
   _renderMovieCard(container, movie) {
-    const movieComponent = new MovieView(movie);
-    const popupComponent = new PopupView(movie);
-
-    movieComponent.setMovieCardClickHandler(popupComponent.renderPopup.bind(popupComponent));
-    render(container.querySelector(`.films-list__container`), movieComponent, RenderPosition.BEFOREEND);
+    new MoviePresenter(container).init(movie);
   }
 
   _renderMoviesList() {
