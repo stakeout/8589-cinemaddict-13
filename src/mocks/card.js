@@ -80,6 +80,7 @@ const generateMovieObject = () => {
   const isWatched = getRandomBoolean();
   const isFavorite = getRandomBoolean();
   const releaseDate = dayjs.past(20);
+  const totalRating = Number(`${getRandomInteger(0, 99) / 10}`);
 
   return {
     id: nanoid(5),
@@ -91,7 +92,7 @@ const generateMovieObject = () => {
     poster: getRandomIndex(posters),
     description: randomDesription,
     comments,
-    totalRating: 0,
+    totalRating,
     releaseDate,
     duration: getRandomInteger(24, 180),
     genre,

@@ -19,6 +19,9 @@ export default class MoviesList {
     this._fimsContainerComponent = new FilmsContainerView();
     this._allMoviesComponent = new AllMoviesView();
     this._sortComponent = new SortView();
+    this._showMoreButtonComponent = new ShowMoreButtonView();
+    this._renderedCardsCount = CARDS_COUNT_PER_STEP;
+    this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
   }
 
   init(data) {
@@ -38,31 +41,30 @@ export default class MoviesList {
 
   _renderMoviesList() {
     render(this._fimsContainerComponent, this._allMoviesComponent, RenderPosition.BEFOREEND);
-    for (let i = 0; i < Math.min(this._data.length, CARDS_COUNT_PER_STEP); i += 1) {
+    for (let i = 0; i < Math.min(this._data.length, this._renderedCardsCount); i += 1) {
       this._renderMovieCard(this._allMoviesComponent.getElement(), this._data[i]);
     }
     this._renderShowMoreBtn();
   }
 
+  _handleShowMoreBtnClick() {
+    this._data
+    .slice(this._renderedCardsCount, this._renderedCardsCount + CARDS_COUNT_PER_STEP)
+    .forEach((movie) => this._renderMovieCard(this._allMoviesComponent.getElement(), movie));
+
+    this._renderedCardsCount += CARDS_COUNT_PER_STEP;
+
+    if (this._renderedCardsCount >= this._data.length) {
+      this._showMoreButtonComponent.getElement().remove();
+      this._showMoreButtonComponent.removeElement();
+    }
+  }
+
   _renderShowMoreBtn() {
     if (this._data.length > CARDS_COUNT_PER_STEP) {
-      const showMoreButtonComponent = new ShowMoreButtonView();
+      render(this._allMoviesComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-      render(this._allMoviesComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
-      let renderTemplateCardCount = CARDS_COUNT_PER_STEP;
-
-      showMoreButtonComponent.setClickHandler(() => {
-        this._data
-          .slice(renderTemplateCardCount, renderTemplateCardCount + CARDS_COUNT_PER_STEP)
-          .forEach((movie) => this._renderMovieCard(this._allMoviesComponent.getElement(), movie));
-
-        renderTemplateCardCount += CARDS_COUNT_PER_STEP;
-
-        if (renderTemplateCardCount >= this._data.length) {
-          showMoreButtonComponent.getElement().remove();
-          showMoreButtonComponent.removeElement();
-        }
-      });
+      this._showMoreButtonComponent.setClickHandler(this._handleShowMoreBtnClick);
     }
   }
 
