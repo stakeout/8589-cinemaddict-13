@@ -2,10 +2,8 @@ import {render, RenderPosition} from '../utils/render.js';
 import SortView from '../view/sort.js';
 import FilmsContainerView from '../view/films-wrapper.js';
 import AllMoviesView from '../view/all-movies.js';
-// import MovieView from '../view/card.js';
 import ShowMoreButtonView from '../view/show-more-btn.js';
 import NoMoviesView from '../view/no-movies.js';
-// import PopupView from '../view/film-details-popup.js';
 
 import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
