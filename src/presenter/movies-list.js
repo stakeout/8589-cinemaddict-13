@@ -9,6 +9,7 @@ import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
 
 import MoviePresenter from './movie.js';
+import {updateItem} from "../utils/common.js";
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
@@ -21,8 +22,9 @@ export default class MoviesList {
     this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
-    this._moviePresenter = {};
+    this._moviePresenters = {};
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
+    this._handleMovieChange = this._handleMovieChange.bind(this);
   }
 
   init(data) {
@@ -32,15 +34,21 @@ export default class MoviesList {
     this._renderBoard();
   }
 
+  _handleMovieChange(updatedMovie) {
+    this._data = updateItem(this._data, updatedMovie);
+    this._moviePresenters[updatedMovie.id].init(updatedMovie); // ???
+  }
+
   _renderMovieCard(container, movie) {
-    const moviePresenter = new MoviePresenter(container);
+    const moviePresenter = new MoviePresenter(container, this._handleMovieChange);
     moviePresenter.init(movie);
-    this._moviePresenter[movie.id] = moviePresenter;
+    this._moviePresenters[movie.id] = moviePresenter;
   }
 
   _renderMoviesList() {
     render(this._fimsContainerComponent, this._allMoviesComponent, RenderPosition.BEFOREEND);
-    for (let i = 0; i < Math.min(this._data.length, this._renderedCardsCount); i += 1) {
+    const length = this._data.length;
+    for (let i = 0; i < Math.min(length, this._renderedCardsCount); i += 1) {
       this._renderMovieCard(this._allMoviesComponent.getElement(), this._data[i]);
     }
     this._renderShowMoreBtn();
@@ -48,9 +56,9 @@ export default class MoviesList {
 
   _clearMoviesList() {
     Object
-      .values(this._moviePresenter)
+      .values(this._moviePresenters)
       .forEach((presenter) => presenter.destroy());
-    this._moviePresenter = {};
+    this._moviePresenters = {};
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     remove(this._showMoreButtonComponent);
   }

@@ -37,7 +37,6 @@ const createElement = (template) => {
 };
 
 const remove = (component) => {
-  console.log(`remove`);
   if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
