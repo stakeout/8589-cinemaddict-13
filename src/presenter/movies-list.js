@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 import SortView from '../view/sort.js';
 import FilmsContainerView from '../view/films-wrapper.js';
 import AllMoviesView from '../view/all-movies.js';
@@ -21,6 +21,7 @@ export default class MoviesList {
     this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
+    this._moviePresenter = {};
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
   }
 
@@ -32,7 +33,9 @@ export default class MoviesList {
   }
 
   _renderMovieCard(container, movie) {
-    new MoviePresenter(container).init(movie);
+    const moviePresenter = new MoviePresenter(container);
+    moviePresenter.init(movie);
+    this._moviePresenter[movie.id] = moviePresenter;
   }
 
   _renderMoviesList() {
@@ -41,6 +44,15 @@ export default class MoviesList {
       this._renderMovieCard(this._allMoviesComponent.getElement(), this._data[i]);
     }
     this._renderShowMoreBtn();
+  }
+
+  _clearMoviesList() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._moviePresenter = {};
+    this._renderedCardsCount = CARDS_COUNT_PER_STEP;
+    remove(this._showMoreButtonComponent);
   }
 
   _handleShowMoreBtnClick() {

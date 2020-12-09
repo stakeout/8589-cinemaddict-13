@@ -1,6 +1,6 @@
 import MovieView from '../view/card.js';
 import PopupPresenter from './popup.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 const popup = new PopupPresenter();
 
@@ -21,5 +21,9 @@ export default class Movie {
 
   _handlePopupOpenClick() {
     popup.init(this._movie);
+  }
+
+  destroy() {
+    remove(this._movieComponent);
   }
 }
