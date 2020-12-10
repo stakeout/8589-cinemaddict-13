@@ -1,32 +1,39 @@
 import MovieView from '../view/card.js';
-import PopupPresenter from './popup.js';
+import PopupView from '../view/film-details-popup.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
-
-const popup = new PopupPresenter();
 
 export default class Movie {
   constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
     this._movieComponent = null;
+    this._popupComponent = null;
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
     this._handleIsWatchedClick = this._handleIsWatchedClick.bind(this);
     this._handleIsInWatchListClick = this._handleIsInWatchListClick.bind(this);
+    this._escHandler = this._escHandler.bind(this);
+    this._closeBtnHandler = this._closeBtnHandler.bind(this);
   }
 
   init(movie) {
     this._movie = movie;
     const prevMovieComponent = this._movieComponent;
+    const prevPopupComponent = this._popupComponent;
     this._movieComponent = new MovieView(movie);
+    this._popupComponent = new PopupView(movie);
+    console.log(this._popupComponent);
 
     this._movieComponent.setMovieCardClickHandler(this._handlePopupOpenClick);
 
     this._movieComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
     this._movieComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
     this._movieComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
+    this._popupComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
+    this._popupComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
+    this._popupComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
 
-    if (prevMovieComponent === null) {
+    if (prevMovieComponent === null || prevPopupComponent === null) {
       render(this._container.querySelector(`.films-list__container`), this._movieComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -34,12 +41,40 @@ export default class Movie {
     if (this._container.querySelector(`.films-list__container`).contains(prevMovieComponent.getElement())) {
       replace(this._movieComponent, prevMovieComponent);
     }
+    if (document.body.contains(prevPopupComponent.getElement())) {
+      replace(this._popupComponent, prevPopupComponent);
+    }
 
     remove(prevMovieComponent);
+    remove(prevPopupComponent);
   }
 
   _handlePopupOpenClick() {
-    popup.init(this._movie);
+    this._renderPopup();
+  }
+  _escHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      this._closePopup();
+    }
+  }
+
+  _closeBtnHandler() {
+    this._closePopup();
+  }
+  _renderPopup() {
+    document.body.classList.add(`hide-overflow`);
+    render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
+    this._popupComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
+    this._popupComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
+    this._popupComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
+    this._popupComponent.setCloseBtnClickHandler(this._closeBtnHandler);
+    document.addEventListener(`keydown`, this._escHandler);
+  }
+
+  _closePopup() {
+    remove(this._popupComponent);
+    document.body.classList.remove(`hide-overflow`);
+    document.removeEventListener(`keydown`, this._escHandler);
   }
 
   _handleIsFavoriteClick() {
