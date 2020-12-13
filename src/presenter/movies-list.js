@@ -22,7 +22,8 @@ export default class MoviesList {
     this._sortComponent = new SortView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
-    this._moviePresenters = {};
+    this._moviePresenter = {};
+    this._handleModeChange = this._handleModeChange.bind(this);
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
     this._handleMovieChange = this._handleMovieChange.bind(this);
   }
@@ -36,13 +37,13 @@ export default class MoviesList {
 
   _handleMovieChange(updatedMovie) {
     this._data = updateItem(this._data, updatedMovie);
-    this._moviePresenters[updatedMovie.id].init(updatedMovie); // ???
+    this._moviePresenter[updatedMovie.id].init(updatedMovie); // ???
   }
 
   _renderMovieCard(container, movie) {
-    const moviePresenter = new MoviePresenter(container, this._handleMovieChange);
+    const moviePresenter = new MoviePresenter(container, this._handleMovieChange, this._handleModeChange);
     moviePresenter.init(movie);
-    this._moviePresenters[movie.id] = moviePresenter;
+    this._moviePresenter[movie.id] = moviePresenter;
   }
 
   _renderMoviesList() {
@@ -54,11 +55,17 @@ export default class MoviesList {
     this._renderShowMoreBtn();
   }
 
+  _handleModeChange() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   _clearMoviesList() {
     Object
-      .values(this._moviePresenters)
+      .values(this._moviePresenter)
       .forEach((presenter) => presenter.destroy());
-    this._moviePresenters = {};
+    this._moviePresenter = {};
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     remove(this._showMoreButtonComponent);
   }
