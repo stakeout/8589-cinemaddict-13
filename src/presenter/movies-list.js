@@ -9,6 +9,7 @@ import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
 
 import MoviePresenter from './movie.js';
+import PopupPresenter from './popup.js';
 import {updateItem} from "../utils/common.js";
 
 const CARDS_COUNT_PER_STEP = 5;
@@ -23,6 +24,7 @@ export default class MoviesList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     this._moviePresenters = {};
+    this._popupPresenters = {};
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
     this._handleMovieChange = this._handleMovieChange.bind(this);
   }
@@ -37,12 +39,16 @@ export default class MoviesList {
   _handleMovieChange(updatedMovie) {
     this._data = updateItem(this._data, updatedMovie);
     this._moviePresenters[updatedMovie.id].init(updatedMovie); // ???
+    this._popupPresenters[updatedMovie.id].init(updatedMovie); // ???
+
   }
 
   _renderMovieCard(container, movie) {
     const moviePresenter = new MoviePresenter(container, this._handleMovieChange);
+    const popupPresenter = new PopupPresenter(this._handleMovieChange);
     moviePresenter.init(movie);
     this._moviePresenters[movie.id] = moviePresenter;
+    this._popupPresenters[movie.id] = popupPresenter;
   }
 
   _renderMoviesList() {
@@ -125,8 +131,8 @@ export default class MoviesList {
       this._renderSort();
       render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
       this._renderMoviesList();
-      this._renderTopRated();
-      this._renderMostCommented();
+      // this._renderTopRated();
+      // this._renderMostCommented();
     } else {
       render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
       this._renderNoMovies();
