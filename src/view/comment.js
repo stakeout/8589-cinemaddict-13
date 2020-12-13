@@ -1,4 +1,5 @@
 import AbstractView from './abstract.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 
 const createCommentItemTemplate = (comment) => {
   const {author, emoji, dateCreation, comment: text} = comment;
@@ -20,9 +21,10 @@ const createCommentItemTemplate = (comment) => {
 };
 
 export default class Comment extends AbstractView {
-  constructor(comment) {
+  constructor(comment, counter) {
     super();
     this._comment = comment;
+    this._commentsCounter = counter;
     this._deleteHandler = this._deleteHandler.bind(this);
   }
 
@@ -30,19 +32,17 @@ export default class Comment extends AbstractView {
     return createCommentItemTemplate(this._comment);
   }
 
-  _deleteHandler({target}) {
-    const counter = document.querySelector(`.film-details__comments-count`);
-    const commentItem = target.closest(`.film-details__comment`);
-    commentItem.remove();
-    counter.textContent -= 1;
+  _deleteHandler(evt) {
+    evt.preventDefault();
+    remove(this);
+    this._commentsCounter.textContent -= 1;
   }
 
-  setCommentDeleteHandler() {
-    // this._callback.delete = cb;
+  setCommentDeleteHandler(cb) {
+    this._callback.deleteClick = cb;
     this.getElement()
         .querySelector(`.film-details__comment-delete`)
         .addEventListener(`click`, this._deleteHandler);
-    this.removeElement();
   }
 }
 

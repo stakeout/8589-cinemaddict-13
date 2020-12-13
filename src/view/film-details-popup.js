@@ -1,9 +1,5 @@
 import AbstractView from './abstract.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
-import {render, RenderPosition} from '../utils/render.js';
-import CommentView from './comment.js';
-
-const mainElement = document.querySelector(`.main`);
 
 const createGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
@@ -155,70 +151,51 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
 };
 
 export default class Popup extends AbstractView {
-  constructor(data) {
+  constructor(movie) {
     super();
-    this._data = data.slice();
-    this._escHandler = this._escHandler.bind(this);
+    this._movie = movie;
     this._closeBtnClickHandler = this._closeBtnClickHandler.bind(this);
-    this.init = this.init.bind(this);
+    this._isInWatchListClickHandler = this._isInWatchListClickHandler.bind(this);
+    this._isWatchedClickHandler = this._isWatchedClickHandler.bind(this);
+    this._isFavoriteClickHandler = this._isFavoriteClickHandler.bind(this);
   }
 
   _getTemplate() {
     return createFilmDetailsPopupTemplate(this._movie);
   }
-  _closePopup() {
-    const popupElement = mainElement.querySelector(`.film-details`);
-    if (mainElement.contains(popupElement)) {
-      mainElement.removeChild(popupElement);
-    }
-    document.body.classList.remove(`hide-overflow`);
-    document.removeEventListener(`keydown`, this._escHandler);
-  }
-  _escHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      this._closePopup();
-    }
-  }
+
   _closeBtnClickHandler() {
-    this._closePopup();
+    this._callback.closeBtnClick();
   }
-  _getCloseBtn() {
-    return this.getElement().querySelector(`.film-details__close-btn`);
-  }
-  _renderCommentsList() {
-    const comments = this._movie.comments;
-    const counter = document.querySelector(`.film-details__comments-count`);
-    counter.textContent = comments.length;
-    const commentsListElement = this.getElement().querySelector(`.film-details__comments-list`);
-    commentsListElement.innerHTML = ``;
-
-    comments.forEach((comment) => {
-      const commentComponent = new CommentView(comment);
-      render(commentsListElement, commentComponent, RenderPosition.BEFOREEND);
-      commentComponent.setCommentDeleteHandler();
-    });
-  }
-  _renderPopup({target}) {
-    const isPopup = mainElement.querySelector(`.film-details`);
-
-    if (mainElement.contains(isPopup)) {
-      mainElement.removeChild(isPopup);
-      this.removeElement();
-    }
-
-    const id = target.closest(`.film-card`).dataset.id;
-    this._movie = this._data.find((elem) => elem.id === `${id}`);
-
-    mainElement.appendChild(this.getElement());
-    document.body.classList.add(`hide-overflow`);
-
-
-    this._renderCommentsList();
-    this._getCloseBtn().addEventListener(`click`, this._closeBtnClickHandler);
-    document.addEventListener(`keydown`, this._escHandler);
+  _isInWatchListClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.isInWatchListClick();
   }
 
-  init(evt) {
-    this._renderPopup(evt);
+  _isWatchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.isWatchedClick();
+  }
+
+  _isFavoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.isFavoriteClick();
+  }
+
+  setIsInWatchListClickHandler(cb) {
+    this._callback.isInWatchListClick = cb;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._isInWatchListClickHandler);
+  }
+  setIsWatchedClickHandler(cb) {
+    this._callback.isWatchedClick = cb;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._isWatchedClickHandler);
+  }
+  setIsFavoriteClickHandler(cb) {
+    this._callback.isFavoriteClick = cb;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._isFavoriteClickHandler);
+  }
+  setCloseBtnClickHandler(cb) {
+    this._callback.closeBtnClick = cb;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeBtnClickHandler);
   }
 }

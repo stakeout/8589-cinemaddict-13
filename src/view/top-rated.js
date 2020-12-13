@@ -15,6 +15,10 @@ export default class TopRated extends AbstractView {
     super();
     this._data = data.slice();
   }
+  getSortedData() {
+    const moviesSortedByTopRate = this._data.sort((a, b) => b.totalRating - a.totalRating);
+    return moviesSortedByTopRate;
+  }
   _getTemplate() {
     return createTopRatedTemplate();
   }
