@@ -26,9 +26,16 @@ export default class Sort extends AbstractView {
     if (target.tagName !== `A`) {
       return;
     }
-
     evt.preventDefault();
+
+    const currentActiveElem = this.getElement().querySelector(`.sort__button--active`);
+
     this._callback.sortTypeChange(target.dataset.sortType);
+
+    if (!target.classList.contains(`.sort__button--active`)) {
+      currentActiveElem.classList.remove(`sort__button--active`);
+      target.classList.add(`sort__button--active`);
+    }
   }
 
   setSortTypeChangeHandler(cb) {
