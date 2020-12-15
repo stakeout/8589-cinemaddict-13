@@ -1,5 +1,5 @@
 import AbstractView from './abstract.js';
-import {render, RenderPosition, remove} from '../utils/render.js';
+import {remove} from '../utils/render.js';
 
 const createCommentItemTemplate = (comment) => {
   const {author, emoji, dateCreation, comment: text} = comment;
