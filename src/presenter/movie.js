@@ -29,34 +29,27 @@ export default class Movie {
   init(movie) {
     this._movie = movie;
     this._comments = movie.comments;
-    const prevMovieComponent = this._movieComponent;
+    this._prevMovieComponent = this._movieComponent;
     const prevPopupComponent = this._popupComponent;
     this._movieComponent = new MovieView(movie);
     this._popupComponent = new PopupView(movie);
 
-    this._movieComponent.setMovieCardClickHandler(this._handlePopupOpenClick);
+    this._setMovieCardHandlers();
 
-    this._movieComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
-    this._movieComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
-    this._movieComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
     this._popupComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
     this._popupComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
     this._popupComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
     this._popupComponent.setCloseBtnClickHandler(this._closeBtnHandler);
 
-    if (prevMovieComponent === null || prevPopupComponent === null) {
+    if (this._prevMovieComponent === null || prevPopupComponent === null) {
       render(this._container.querySelector(`.films-list__container`), this._movieComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this._container.querySelector(`.films-list__container`).contains(prevMovieComponent.getElement())) {
-      replace(this._movieComponent, prevMovieComponent);
-    }
     if (document.body.contains(prevPopupComponent.getElement())) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
-    remove(prevMovieComponent);
     remove(prevPopupComponent);
   }
 
@@ -72,13 +65,26 @@ export default class Movie {
   _closeBtnHandler() {
     this._closePopup();
   }
+  _setMovieCardHandlers() {
+    this._movieComponent.setMovieCardClickHandler(this._handlePopupOpenClick);
 
-  // resetView() {
-  //   if (this._mode !== Mode.DEFAULT) {
-  //     this._renderPopup();
-  //   }
-  // }
+    this._movieComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
+    this._movieComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
+    this._movieComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
+  }
+  movieUpdate(updatedMovie) {
 
+    this._movie = updatedMovie;
+    this._prevMovieComponent = this._movieComponent;
+    this._movieComponent = new MovieView(updatedMovie);
+
+    this._setMovieCardHandlers();
+
+    if (this._container.querySelector(`.films-list__container`).contains(this._prevMovieComponent.getElement())) {
+      replace(this._movieComponent, this._prevMovieComponent);
+    }
+    remove(this._prevMovieComponent);
+  }
   _renderPopup() {
     document.body.classList.add(`hide-overflow`);
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
