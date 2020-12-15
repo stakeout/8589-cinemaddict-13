@@ -43,6 +43,16 @@ const updateItem = (items, update) => {
   ];
 };
 
+const sortMoviesByDate = (a, b) => {
+
+  return dayjs(b.releaseDate).diff(dayjs(a.releaseDate));
+};
+
+const sortMoviesByRating = (a, b) => {
+
+  return b.totalRating - a.totalRating;
+};
+
 export {
   getRandomInteger,
   getRandomBoolean,
@@ -51,4 +61,6 @@ export {
   dayjs,
   formatDurationTime,
   updateItem,
+  sortMoviesByDate,
+  sortMoviesByRating,
 };

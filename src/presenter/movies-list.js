@@ -9,7 +9,8 @@ import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
 
 import MoviePresenter from './movie.js';
-import {updateItem} from "../utils/common.js";
+import {updateItem, sortMoviesByDate, sortMoviesByRating} from "../utils/common.js";
+import {SortType} from "../utils/const.js";
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
@@ -23,13 +24,16 @@ export default class MoviesList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     this._moviePresenter = {};
-    this._handleModeChange = this._handleModeChange.bind(this);
+    this._currentSortType = SortType.DEFAULT;
+    // this._handleModeChange = this._handleModeChange.bind(this);
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
     this._handleMovieChange = this._handleMovieChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(data) {
     this._data = data.slice();
+    this._defaultData = data.slice();
     this._isCommentedMovies = data.filter((movie) => movie.comments.length > 0);
     this._isRatedMovies = data.filter((movie) => movie.totalRating > 0);
     this._renderBoard();
@@ -41,7 +45,7 @@ export default class MoviesList {
   }
 
   _renderMovieCard(container, movie) {
-    const moviePresenter = new MoviePresenter(container, this._handleMovieChange, this._handleModeChange);
+    const moviePresenter = new MoviePresenter(container, this._handleMovieChange);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }
@@ -55,11 +59,11 @@ export default class MoviesList {
     this._renderShowMoreBtn();
   }
 
-  _handleModeChange() {
-    Object
-      .values(this._moviePresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
+  // _handleModeChange() {
+  //   Object
+  //     .values(this._moviePresenter)
+  //     .forEach((presenter) => presenter.resetView());
+  // }
 
   _clearMoviesList() {
     Object
@@ -90,9 +94,33 @@ export default class MoviesList {
       this._showMoreButtonComponent.setClickHandler(this._handleShowMoreBtnClick);
     }
   }
+  _sortMovies(sortType) {
 
+    switch (sortType) {
+      case SortType.DATE:
+        this._data.sort(sortMoviesByDate);
+        break;
+      case SortType.RATING:
+        this._data.sort(sortMoviesByRating);
+        break;
+      default:
+        this._data = this._defaultData.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortMovies(sortType);
+    this._clearMoviesList();
+    this._renderMoviesList();
+  }
   _renderSort() {
     render(this._containerElement, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderNoMovies() {
@@ -132,8 +160,8 @@ export default class MoviesList {
       this._renderSort();
       render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
       this._renderMoviesList();
-      this._renderTopRated();
-      this._renderMostCommented();
+      // this._renderTopRated();
+      // this._renderMostCommented();
     } else {
       render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
       this._renderNoMovies();

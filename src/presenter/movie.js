@@ -10,13 +10,13 @@ const Mode = {
 };
 
 export default class Movie {
-  constructor(container, changeData, changeMode) {
+  constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
-    this._changeMode = changeMode;
+    // this._changeMode = changeMode;
     this._movieComponent = null;
     this._popupComponent = null;
-    this._mode = Mode.DEFAULT;
+    // this._mode = Mode.DEFAULT;
 
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
@@ -42,16 +42,17 @@ export default class Movie {
     this._popupComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
     this._popupComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
     this._popupComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
+    this._popupComponent.setCloseBtnClickHandler(this._closeBtnHandler);
 
     if (prevMovieComponent === null || prevPopupComponent === null) {
       render(this._container.querySelector(`.films-list__container`), this._movieComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this._mode === Mode.DEFAULT) {
+    if (this._container.querySelector(`.films-list__container`).contains(prevMovieComponent.getElement())) {
       replace(this._movieComponent, prevMovieComponent);
     }
-    if (this._mode === Mode.POPUP) {
+    if (document.body.contains(prevPopupComponent.getElement())) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
@@ -72,11 +73,11 @@ export default class Movie {
     this._closePopup();
   }
 
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._renderPopup();
-    }
-  }
+  // resetView() {
+  //   if (this._mode !== Mode.DEFAULT) {
+  //     this._renderPopup();
+  //   }
+  // }
 
   _renderPopup() {
     document.body.classList.add(`hide-overflow`);
@@ -86,8 +87,8 @@ export default class Movie {
     this._popupComponent.setIsFavoriteClickHandler(this._handleIsFavoriteClick);
     this._popupComponent.setCloseBtnClickHandler(this._closeBtnHandler);
     document.addEventListener(`keydown`, this._escHandler);
-    this._changeMode();
-    this._mode = Mode.POPUP;
+    // this._changeMode();
+    // this._mode = Mode.POPUP;
     const commentsContainer = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
     const commentsCounter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
     new CommentsPresenter(commentsContainer, commentsCounter).init(this._comments);
@@ -97,7 +98,7 @@ export default class Movie {
     remove(this._popupComponent);
     document.body.classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._escHandler);
-    this._mode = Mode.DEFAULT;
+    // this._mode = Mode.DEFAULT;
   }
 
   _handleIsFavoriteClick() {
@@ -136,5 +137,6 @@ export default class Movie {
 
   destroy() {
     remove(this._movieComponent);
+    // remove(this._popupComponent);
   }
 }
