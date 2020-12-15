@@ -51,7 +51,7 @@ export default class MoviesList {
   }
 
   _renderMoviesList() {
-    render(this._fimsContainerComponent, this._allMoviesComponent, RenderPosition.BEFOREEND);
+    // render(this._fimsContainerComponent, this._allMoviesComponent, RenderPosition.BEFOREEND);
     const length = this._data.length;
     for (let i = 0; i < Math.min(length, this._renderedCardsCount); i += 1) {
       this._renderMovieCard(this._allMoviesComponent.getElement(), this._data[i]);
@@ -159,6 +159,7 @@ export default class MoviesList {
     if (this._data.length > 0) {
       this._renderSort();
       render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
+      render(this._fimsContainerComponent, this._allMoviesComponent, RenderPosition.BEFOREEND);
       this._renderMoviesList();
       // this._renderTopRated();
       // this._renderMostCommented();

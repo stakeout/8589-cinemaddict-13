@@ -4,10 +4,10 @@ import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 import CommentsPresenter from './comments.js';
 
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  POPUP: `POPUP`,
-};
+// const Mode = {
+//   DEFAULT: `DEFAULT`,
+//   POPUP: `POPUP`,
+// };
 
 export default class Movie {
   constructor(container, changeData) {
