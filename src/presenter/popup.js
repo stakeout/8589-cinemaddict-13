@@ -2,9 +2,9 @@ import PopupView from '../view/film-details-popup.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 export default class PopupPresenter {
-  constructor(changeData, currentMode) {
+  constructor() {
     this._container = document.body;
-    this._changeData = changeData;
+    // this._changeData = changeData;
     this._popupComponent = null;
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
@@ -14,9 +14,9 @@ export default class PopupPresenter {
     this._closeBtnHandler = this._closeBtnHandler.bind(this);
   }
 
-  init(movie) {
-    console.log(`ini popup`);
+  init(movie, changeData) {
     this._movie = movie;
+    this._changeData = changeData;
     this._prevPopupComponent = this._popupComponent;
     this._popupComponent = new PopupView(movie);
 
@@ -24,12 +24,12 @@ export default class PopupPresenter {
     this._container.classList.add(`hide-overflow`);
     document.addEventListener(`keydown`, this._escHandler);
 
-    if (this._prevPopupComponent === null) {
-      render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
-      // console.log(`render popup`);
-      return;
+    if (this._prevPopupComponent !== null) {
+      remove(this._prevPopupComponent);
     }
+    render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
   }
+
   _setPopupHandlers() {
     this._popupComponent.setIsInWatchListClickHandler(this._handleIsInWatchListClick);
     this._popupComponent.setIsWatchedClickHandler(this._handleIsWatchedClick);
@@ -38,17 +38,20 @@ export default class PopupPresenter {
   }
 
   updatePopup(updatedMovie) {
+    if (this._popupComponent === null) {
+      return;
+    }
     console.log(`popup updating`);
     this._movie = updatedMovie;
-    this._prevPopupComponent = this._popupComponent;
+    this._currentPopup = this._popupComponent;
     this._popupComponent = new PopupView(updatedMovie);
 
     this._setPopupHandlers();
 
-    if (document.body.contains(this._prevPopupComponent.getElement())) {
-      replace(this._popupComponent, this._prevPopupComponent);
+    if (document.body.contains(this._currentPopup.getElement())) {
+      replace(this._popupComponent, this._currentPopup);
     }
-    remove(this._prevPopupComponent);
+    remove(this._currentPopup);
     console.log(`popup updated`);
   }
 

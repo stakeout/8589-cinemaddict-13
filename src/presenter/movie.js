@@ -5,19 +5,20 @@ import {render, RenderPosition, replace, remove} from '../utils/render.js';
 // import CommentsPresenter from './comments.js';
 import PopupPresenter from './popup.js';
 
-const Mode = {
-  DEFAULT: `default`,
-  POPUP: `popup`,
-};
+// const Mode = {
+//   DEFAULT: `default`,
+//   POPUP: `popup`,
+// };
+const popupPresenter = new PopupPresenter();
 
-export default class Movie {
+class Movie {
   constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
-    this._popupPresenter = new PopupPresenter(changeData);
+
     // this._changeMode = changeMode;
     this._movieComponent = null;
-    this._mode = Mode.DEFAULT;
+    // this._mode = Mode.DEFAULT;
 
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
@@ -49,13 +50,10 @@ export default class Movie {
     }
     remove(this._prevMovieComponent);
     // update popup
-    if (this._mode !== Mode.DEFAULT) {
-      this._popupPresenter.updatePopup(updatedMovie);
-    }
+    popupPresenter.updatePopup(updatedMovie);
   }
   _handlePopupOpenClick() {
-    this._mode = Mode.POPUP;
-    this._popupPresenter.init(this._movie, this._mode);
+    popupPresenter.init(this._movie, this._changeData);
   }
 
   _setMovieCardHandlers() {
@@ -104,3 +102,5 @@ export default class Movie {
     remove(this._movieComponent);
   }
 }
+
+export default Movie;
