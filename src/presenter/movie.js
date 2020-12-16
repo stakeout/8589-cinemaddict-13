@@ -1,24 +1,16 @@
 import MovieView from '../view/card.js';
-// import PopupView from '../view/film-details-popup.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 // import CommentsPresenter from './comments.js';
 import PopupPresenter from './popup.js';
 
-// const Mode = {
-//   DEFAULT: `default`,
-//   POPUP: `popup`,
-// };
 const popupPresenter = new PopupPresenter();
 
 class Movie {
   constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
-
-    // this._changeMode = changeMode;
     this._movieComponent = null;
-    // this._mode = Mode.DEFAULT;
 
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);

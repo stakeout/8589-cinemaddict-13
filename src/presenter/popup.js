@@ -1,10 +1,9 @@
 import PopupView from '../view/film-details-popup.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
-export default class PopupPresenter {
+class PopupPresenter {
   constructor() {
     this._container = document.body;
-    // this._changeData = changeData;
     this._popupComponent = null;
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
@@ -38,39 +37,35 @@ export default class PopupPresenter {
   }
 
   updatePopup(updatedMovie) {
+    // debugger
     if (this._popupComponent === null) {
       return;
     }
-    console.log(`popup updating`);
     this._movie = updatedMovie;
     this._currentPopup = this._popupComponent;
     this._popupComponent = new PopupView(updatedMovie);
 
     this._setPopupHandlers();
 
-    if (document.body.contains(this._currentPopup.getElement())) {
+    if (this._container.contains(this._currentPopup.getElement())) {
       replace(this._popupComponent, this._currentPopup);
     }
     remove(this._currentPopup);
-    console.log(`popup updated`);
   }
 
   _closePopup() {
     remove(this._popupComponent);
+    this._popupComponent = null;
     document.body.classList.remove(`hide-overflow`);
     document.removeEventListener(`keydown`, this._escHandler);
-    // this._mode = Mode.DEFAULT;
   }
   _closeBtnHandler() {
     this._closePopup();
   }
   _escHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
-      this.destroy();
+      this._closePopup();
     }
-  }
-  _closeBtnHandler() {
-    this.destroy();
   }
 
   _handleIsFavoriteClick() {
@@ -107,9 +102,11 @@ export default class PopupPresenter {
     );
   }
 
-  destroy() {
-    remove(this._popupComponent);
-    document.body.classList.remove(`hide-overflow`);
-    document.removeEventListener(`keydown`, this._escHandler);
-  }
+  // destroy() {
+  //   remove(this._popupComponent);
+  //   document.body.classList.remove(`hide-overflow`);
+  //   document.removeEventListener(`keydown`, this._escHandler);
+  // }
 }
+
+export default PopupPresenter;
