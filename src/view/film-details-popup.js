@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 import {dayjs, formatDurationTime} from '../utils/common.js';
 
 const createGenreTemplate = (genre) => {
@@ -150,7 +150,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
   `.trim();
 };
 
-export default class Popup extends AbstractView {
+export default class Popup extends SmartView {
   constructor(movie) {
     super();
     this._movie = movie;
