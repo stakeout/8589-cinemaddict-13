@@ -1,5 +1,6 @@
 import PopupView from '../view/film-details-popup.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import CommentsPresenter from './comments.js';
 
 class PopupPresenter {
   constructor() {
@@ -18,6 +19,9 @@ class PopupPresenter {
     this._changeData = changeData;
     this._prevPopupComponent = this._popupComponent;
     this._popupComponent = new PopupView(movie);
+    const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+    const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    this._emojiesComponent = new CommentsPresenter(commentsWrap, counter);
 
     this._setPopupHandlers();
     this._container.classList.add(`hide-overflow`);
@@ -27,6 +31,7 @@ class PopupPresenter {
       remove(this._prevPopupComponent);
     }
     render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
+    this._emojiesComponent.init(movie.comments);
   }
 
   _setPopupHandlers() {

@@ -1,7 +1,6 @@
 import MovieView from '../view/card.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
-// import CommentsPresenter from './comments.js';
 import PopupPresenter from './popup.js';
 
 const popupPresenter = new PopupPresenter();
