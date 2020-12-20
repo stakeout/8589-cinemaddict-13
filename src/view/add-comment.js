@@ -38,6 +38,7 @@ export default class Comment extends SmartView {
     super();
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._messageInputHandler = this._messageInputHandler.bind(this);
+    this._setInnerHandlers();
   }
 
   _getTemplate() {
@@ -50,12 +51,12 @@ export default class Comment extends SmartView {
     this.updateData({
       emoji,
     });
-    console.log(this._data);
-    this._renderEmojiIcon();
+    if (this._data.emoji) {
+      this._renderEmojiIcon();
+    }
   }
 
   _messageInputHandler(evt) {
-    console.log(evt.target.value);
     evt.preventDefault();
     this.updateData({
       commentText: evt.target.value,
@@ -66,18 +67,17 @@ export default class Comment extends SmartView {
     const iconTemplate = `<img src="images/emoji/${this._data.emoji}.png" width="55" height="55" alt="emoji-${this._data.emoji}">`;
     container.innerHTML = iconTemplate;
   }
-  setEmojiClickHandler() {
-    console.log(`set click emoji`);
-    // this._callback.emojiClick = cb;
+  _setInnerHandlers() {
     this.getElement()
         .querySelector(`.film-details__emoji-list`)
         .addEventListener(`change`, this._emojiClickHandler);
-  }
-
-  setCommentInputHandler() {
-    // this._callback.emojiClick = cb;
     this.getElement()
         .querySelector(`.film-details__comment-input`)
-        .addEventListener(`click`, this._emojiClickHandler);
+        .addEventListener(`input`, this._messageInputHandler);
+  }
+  restoreHandlers() {
+    delete this._data.emoji;
+    delete this._data.commentText;
+    this._setInnerHandlers();
   }
 }

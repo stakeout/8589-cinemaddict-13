@@ -20,7 +20,6 @@ export default class Smart extends Abstract {
     if (!isOnlyDataUpdating) {
       return;
     }
-    console.log(`update emojies`);
     this.updateElement();
   }
 
