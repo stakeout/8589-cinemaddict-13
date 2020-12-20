@@ -114,7 +114,7 @@ const createFilmDetailsPopupTemplate = (movieObject) => {
               <span class="film-details__comments-count">0</span>
             </h3>
             <ul class="film-details__comments-list"></ul>
-           </section>
+          </section>
         </div>
       </form>
     </section>

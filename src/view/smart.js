@@ -6,7 +6,7 @@ export default class Smart extends Abstract {
     this._data = {};
   }
 
-  updateData(update, isUpdating) {
+  updateData(update, isOnlyDataUpdating = false) {
     if (!update) {
       return;
     }
@@ -17,10 +17,10 @@ export default class Smart extends Abstract {
         update
     );
 
-    if (isUpdating) {
+    if (!isOnlyDataUpdating) {
       return;
     }
-
+    console.log(`update emojies`);
     this.updateElement();
   }
 

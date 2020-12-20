@@ -23,6 +23,8 @@ export default class CommentsPresenter {
   }
   _renderEmojies() {
     this._emojiesComponent = new EmojiesComponent();
+    this._emojiesComponent.setEmojiClickHandler();
+    this._emojiesComponent.setCommentInputHandler();
     render(this._container, this._emojiesComponent, RenderPosition.BEFOREEND);
   }
 }

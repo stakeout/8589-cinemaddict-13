@@ -49,11 +49,15 @@ class PopupPresenter {
     this._movie = updatedMovie;
     this._currentPopup = this._popupComponent;
     this._popupComponent = new PopupView(updatedMovie);
+    const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+    const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    this._emojiesComponent = new CommentsPresenter(commentsWrap, counter);
 
     this._setPopupHandlers();
 
     if (this._container.contains(this._currentPopup.getElement())) {
       replace(this._popupComponent, this._currentPopup);
+      this._emojiesComponent.init(updatedMovie.comments);
     }
     remove(this._currentPopup);
   }
