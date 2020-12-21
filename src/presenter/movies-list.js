@@ -41,7 +41,7 @@ export default class MoviesList {
 
   _handleMovieChange(updatedMovie) {
     this._data = updateItem(this._data, updatedMovie);
-    this._moviePresenter[updatedMovie.id].init(updatedMovie); // ???
+    this._moviePresenter[updatedMovie.id].movieUpdate(updatedMovie); // ???
   }
 
   _renderMovieCard(container, movie) {

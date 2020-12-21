@@ -2,12 +2,16 @@ import AbstractView from '../view/abstract.js';
 
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  ARTEREND: `afterend`,
 };
 
 const renderTemplate = (container, template, place) => {
   if (container instanceof AbstractView) {
     container = container.getElement();
+  }
+  if (template instanceof AbstractView) {
+    template = template.getElement();
   }
   container.insertAdjacentHTML(place, template);
 };
