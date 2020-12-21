@@ -11,6 +11,7 @@ import {generateFilter} from './mocks/filter.js';
 import MoviesBoardPresenter from './presenter/movies-list.js';
 
 import MoviesModel from "./model/movies.js";
+import CommentsModel from "./model/comments.js";
 
 const CARDS_AMOUNT = 12;
 
@@ -19,6 +20,7 @@ const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
 // console.log(data);
 const moviesModel = new MoviesModel();
+const commentsModel = new CommentsModel();
 moviesModel.movies = data;
 
 const headerElement = document.querySelector(`.header`);
@@ -32,7 +34,7 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 render(mainNav, new FiltersView(filters), RenderPosition.BEFOREEND);
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 
-new MoviesBoardPresenter(mainElement, moviesModel).init(data);
+new MoviesBoardPresenter(mainElement, moviesModel, commentsModel).init();
 
 const footerStats = document.querySelector(`.footer__statistics`);
 render(footerStats, new FooterStatsView(data.length), RenderPosition.BEFOREEND);

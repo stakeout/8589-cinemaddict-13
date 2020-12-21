@@ -1,8 +1,8 @@
 import MovieView from '../view/card.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {UserAction, UpdateType} from '../utils/const.js';
 
 import PopupPresenter from './popup.js';
-
 const popupPresenter = new PopupPresenter();
 
 class Movie {
@@ -57,6 +57,8 @@ class Movie {
 
   _handleIsFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -68,6 +70,8 @@ class Movie {
   }
   _handleIsWatchedClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -79,6 +83,8 @@ class Movie {
   }
   _handleIsInWatchListClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
