@@ -16,8 +16,9 @@ const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
 
 export default class MoviesList {
-  constructor(parentContainer) {
+  constructor(parentContainer, moviesModel) {
     this._containerElement = parentContainer;
+    this._moviesModel = moviesModel;
     this._fimsContainerComponent = new FilmsContainerView();
     this._allMoviesComponent = new AllMoviesView();
     this._sortComponent = new SortView();
@@ -38,7 +39,9 @@ export default class MoviesList {
     this._isRatedMovies = data.filter((movie) => movie.totalRating > 0);
     this._renderBoard();
   }
-
+  _getMovies() {
+    return this._moviesModel.movies;
+  }
   _handleMovieChange(updatedMovie) {
     this._data = updateItem(this._data, updatedMovie);
     this._moviePresenter[updatedMovie.id].movieUpdate(updatedMovie); // ???
