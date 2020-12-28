@@ -40,7 +40,12 @@ export default class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange(filterType) {
+  _handleFilterTypeChange({target}) {
+    if (!target.tagName === `A`) {
+      return;
+    }
+    const filterType = target.hash.slice(1);
+
     if (this._currentFilter === filterType) {
       return;
     }
