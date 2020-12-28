@@ -9,12 +9,16 @@ import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
 
 import MoviePresenter from './movie.js';
+// import ProfilePresenter from './profile.js';
+
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/common.js';
 import {SortType, UpdateType, UserAction} from '../utils/const.js';
 import {filter} from "../utils/filter.js";
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
+
+// const headerElement = document.querySelector(`.header`);
 
 export default class MoviesList {
   constructor(parentContainer, moviesModel, filtersModel, commentsModel) {
@@ -44,8 +48,10 @@ export default class MoviesList {
     this._filtersModel.addObserver(this._handleModelEvent);
   }
 
-  init() {
+  init(profilePresenter) {
+    this._profilePresenter = profilePresenter;
     this._renderBoard();
+
   }
   _getMovies() {
     const filterType = this._filtersModel.getFilter();
@@ -62,9 +68,6 @@ export default class MoviesList {
     return filtredMovies;
   }
 
-  // _handleMovieChange(updatedMovie) {
-  //   this._moviePresenter[updatedMovie.id].movieUpdate(updatedMovie);
-  // }
   _handleViewAction(actionType, updateType, update) {
     // console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
@@ -94,6 +97,8 @@ export default class MoviesList {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
         this._moviePresenter[data.id].movieUpdate(data);
+        const historyCount = this._moviesModel.movies.filter((element) => element.isWatched).length;
+        this._profilePresenter.update(historyCount, updateType);
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
