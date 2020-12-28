@@ -10,8 +10,9 @@ import {generateFilter} from './mocks/filter.js';
 
 import MoviesBoardPresenter from './presenter/movies-list.js';
 
-import MoviesModel from "./model/movies.js";
-import CommentsModel from "./model/comments.js";
+import MoviesModel from './model/movies.js';
+import FilterModel from './model/filter.js';
+import CommentsModel from './model/comments.js';
 
 const CARDS_AMOUNT = 12;
 
@@ -20,6 +21,7 @@ const filters = generateFilter(data);
 const historyCount = filters.find((element) => element.name === `history`).count;
 // console.log(data);
 const moviesModel = new MoviesModel();
+const filterModel = new FilterModel();
 const commentsModel = new CommentsModel();
 moviesModel.movies = data;
 
