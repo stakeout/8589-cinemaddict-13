@@ -1,4 +1,5 @@
 const movieToFilterMap = {
+  // all: (movies) => movies.slice(),
   watchlist: (movies) => movies
     .filter((task) => task.isInWatchList).length,
   history: (movies) => movies
