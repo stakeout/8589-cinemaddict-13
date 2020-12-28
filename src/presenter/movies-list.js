@@ -206,6 +206,7 @@ export default class MoviesList {
     this._moviePresenter = {};
 
     remove(this._sortComponent);
+    remove(this._allMoviesComponent);
     remove(this._noMoviesComponent);
     remove(this._showMoreButtonComponent);
 

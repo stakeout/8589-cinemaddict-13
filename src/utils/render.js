@@ -55,16 +55,13 @@ const remove = (component) => {
 const replace = (newChild, oldChild) => {
   if (oldChild instanceof AbstractView) {
     oldChild = oldChild.getElement();
-    console.log(oldChild);
   }
 
   if (newChild instanceof AbstractView) {
     newChild = newChild.getElement();
-    console.log(newChild);
   }
 
   const parent = oldChild.parentElement;
-  console.log(parent);
 
   if (parent === null || oldChild === null || newChild === null) {
     throw new Error(`Can't replace unexisting elements`);

@@ -14,7 +14,7 @@ import AbstractView from './abstract.js';
 
 const createProfileTemplate = (historyCount) => {
   const isUserRating = showUserStatus(historyCount);
-  console.log(isUserRating);
+
   return `
     <section class="header__profile profile">
       ${isUserRating ? `<p class="profile__rating">${isUserRating}</p>` : ``}

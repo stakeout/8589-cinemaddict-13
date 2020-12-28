@@ -1,5 +1,4 @@
 import {render, RenderPosition} from './utils/render.js';
-import UserProfileView from './view/profile.js';
 import MainNavContainerView from './view/main-navigation.js';
 import StatsView from './view/stats.js';
 import FooterStatsView from './view/footer-stats.js';
