@@ -2,7 +2,7 @@ import AbstractView from './abstract.js';
 
 const createFilterItemTemplate = ({name, count}, currentFilterType) => {
   const upperName = name[0].toUpperCase() + name.slice(1);
-  const isDefaulFilter = name === `all` ? true : false;
+  const isDefaulFilter = name === `All` ? true : false;
   const filterName = isDefaulFilter ? `${upperName} movies` : upperName;
   const counterElement = `<span class="main-navigation__item-count">${count}</span>`;
 
