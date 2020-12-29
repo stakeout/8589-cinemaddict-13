@@ -95,7 +95,7 @@ export default class MoviesList {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
-        this._moviePresenter[updatedMovieObject.id].movieUpdate(updatedMovieObject);
+        this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)

@@ -3,7 +3,6 @@ import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import {UserAction, UpdateType} from '../utils/const.js';
 
 import PopupPresenter from './popup.js';
-const popupPresenter = new PopupPresenter();
 
 class Movie {
   constructor(container, changeData) {
@@ -28,22 +27,14 @@ class Movie {
       render(this._container.querySelector(`.films-list__container`), this._movieComponent, RenderPosition.BEFOREEND);
       return;
     }
-  }
-  movieUpdate(updatedMovie) {
-    this._movie = updatedMovie;
-    this._prevMovieComponent = this._movieComponent;
-    this._movieComponent = new MovieView(updatedMovie);
-
-    this._setMovieCardHandlers();
-
     if (this._container.querySelector(`.films-list__container`).contains(this._prevMovieComponent.getElement())) {
       replace(this._movieComponent, this._prevMovieComponent);
     }
     remove(this._prevMovieComponent);
-    // update popup
-    popupPresenter.updatePopup(updatedMovie);
   }
+
   _handlePopupOpenClick() {
+    const popupPresenter = new PopupPresenter();
     popupPresenter.init(this._movie, this._changeData);
   }
 

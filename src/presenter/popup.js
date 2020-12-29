@@ -1,6 +1,6 @@
 import PopupView from '../view/film-details-popup.js';
 import {UserAction, UpdateType} from '../utils/const.js';
-import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {render, RenderPosition, remove} from '../utils/render.js';
 import CommentsPresenter from './comments.js';
 
 class PopupPresenter {
@@ -42,26 +42,26 @@ class PopupPresenter {
     this._popupComponent.setCloseBtnClickHandler(this._closeBtnHandler);
   }
 
-  updatePopup(updatedMovie) {
-    // debugger
-    if (this._popupComponent === null) {
-      return;
-    }
-    this._movie = updatedMovie;
-    this._currentPopup = this._popupComponent;
-    this._popupComponent = new PopupView(updatedMovie);
-    const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
-    const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    this._emojiesComponent = new CommentsPresenter(commentsWrap, counter);
+  // updatePopup(updatedMovie) {
+  //   // debugger
+  //   if (this._popupComponent === null) {
+  //     return;
+  //   }
+  //   this._movie = updatedMovie;
+  //   this._currentPopup = this._popupComponent;
+  //   this._popupComponent = new PopupView(updatedMovie);
+  //   const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+  //   const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
+  //   this._emojiesComponent = new CommentsPresenter(commentsWrap, counter);
 
-    this._setPopupHandlers();
+  //   this._setPopupHandlers();
 
-    if (this._container.contains(this._currentPopup.getElement())) {
-      replace(this._popupComponent, this._currentPopup);
-      this._emojiesComponent.init(updatedMovie.comments);
-    }
-    remove(this._currentPopup);
-  }
+  //   if (this._container.contains(this._currentPopup.getElement())) {
+  //     replace(this._popupComponent, this._currentPopup);
+  //     this._emojiesComponent.init(updatedMovie.comments);
+  //   }
+  //   remove(this._currentPopup);
+  // }
 
   _closePopup() {
     remove(this._popupComponent);
@@ -79,6 +79,7 @@ class PopupPresenter {
   }
 
   _handleIsFavoriteClick() {
+    console.log(`favorite`);
     this._changeData(
         UserAction.UPDATE,
         UpdateType.PATCH,
@@ -92,6 +93,7 @@ class PopupPresenter {
     );
   }
   _handleIsWatchedClick() {
+    console.log(`watched`);
     this._changeData(
         UserAction.UPDATE,
         UpdateType.PATCH,
@@ -105,6 +107,7 @@ class PopupPresenter {
     );
   }
   _handleIsInWatchListClick() {
+    console.log(`watch list`);
     this._changeData(
         UserAction.UPDATE,
         UpdateType.PATCH,
