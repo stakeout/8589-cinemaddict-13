@@ -110,7 +110,7 @@ export default class MoviesList {
     }
   }
   _renderMovie(container, movie) {
-    const moviePresenter = new MoviePresenter(container, this._handleViewAction);
+    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._moviesModel);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }
