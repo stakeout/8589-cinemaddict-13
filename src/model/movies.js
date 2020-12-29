@@ -6,19 +6,19 @@ export default class Movies extends Observer {
     this._movies = [];
   }
 
-  updateMovie(updateType, update) {
-    const index = this._movies.findIndex((item) => item.id === update.id);
+  updateMovie(updateType, updatedMovieObject) {
+    const index = this._movies.findIndex((item) => item.id === updatedMovieObject.id);
 
     if (index === -1) {
       throw new Error(`Can't update unexisting movie`);
     }
     this._movies = [
       ...this._movies.slice(0, index),
-      update,
+      updatedMovieObject,
       ...this._movies.slice(index + 1)
     ];
 
-    this._notify(updateType, update);
+    this._notify(updateType, updatedMovieObject);
   }
 
   set movies(movies) {

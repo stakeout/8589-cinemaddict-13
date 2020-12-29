@@ -23,13 +23,10 @@ const filtersModel = new FilterModel();
 const commentsModel = new CommentsModel();
 moviesModel.movies = data;
 
-const historyCount = moviesModel.movies.filter((element) => element.isWatched).length;
-
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
-const profilePresenter = new ProfilePresenter(headerElement);
-profilePresenter.init(historyCount);
+new ProfilePresenter(headerElement, moviesModel).init();
 render(mainElement, new MainNavContainerView(), RenderPosition.BEFOREEND);
 
 const mainNav = mainElement.querySelector(`.main-navigation`);
@@ -37,7 +34,7 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 new FilterPresenter(mainNav, filtersModel, moviesModel).init();
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 
-new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, commentsModel).init(profilePresenter);
+new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, commentsModel).init();
 
 const footerStats = document.querySelector(`.footer__statistics`);
 render(footerStats, new FooterStatsView(data.length), RenderPosition.BEFOREEND);

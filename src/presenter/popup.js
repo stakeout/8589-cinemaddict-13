@@ -1,4 +1,5 @@
 import PopupView from '../view/film-details-popup.js';
+import {UserAction, UpdateType} from '../utils/const.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 import CommentsPresenter from './comments.js';
 
@@ -79,6 +80,8 @@ class PopupPresenter {
 
   _handleIsFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -90,6 +93,8 @@ class PopupPresenter {
   }
   _handleIsWatchedClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -101,6 +106,8 @@ class PopupPresenter {
   }
   _handleIsInWatchListClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,

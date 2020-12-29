@@ -1,16 +1,19 @@
 import ProfileView from '../view/profile.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
-// import {UserAction, UpdateType} from '../utils/const.js';
-
 
 export default class Profile {
-  constructor(container, updateType = ``) {
+  constructor(container, moviesModel) {
     this._container = container;
-    this._updateType = updateType;
+    this._moviesModel = moviesModel;
     this._profileComponent = null;
+
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+
+    this._moviesModel.addObserver(this._handleModelEvent);
   }
 
-  init(count) {
+  init() {
+    const count = this._moviesModel.movies.filter((element) => element.isWatched).length;
     this._prevProfileComponent = this._profileComponent;
     this._profileComponent = new ProfileView(count);
 
@@ -18,16 +21,13 @@ export default class Profile {
       render(this._container, this._profileComponent, RenderPosition.BEFOREEND);
       return;
     }
-  }
-
-  update(count, update) {
-    this._updateType = update;
-    this._currentProfileComponent = this._profileComponent;
-    this._profileComponent = new ProfileView(count);
-
-    if (this._updateType !== ``) {
-      replace(this._profileComponent, this._currentProfileComponent);
+    if (this._container.contains(this._prevProfileComponent.getElement())) {
+      replace(this._profileComponent.getElement(), this._prevProfileComponent.getElement());
     }
     remove(this._prevProfileComponent);
+  }
+
+  _handleModelEvent() {
+    this.init();
   }
 }

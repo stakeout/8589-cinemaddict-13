@@ -48,11 +48,10 @@ export default class MoviesList {
     this._filtersModel.addObserver(this._handleModelEvent);
   }
 
-  init(profilePresenter) {
-    this._profilePresenter = profilePresenter;
+  init() {
     this._renderBoard();
-
   }
+
   _getMovies() {
     const filterType = this._filtersModel.getFilter();
     const movies = this._moviesModel.movies;
@@ -68,7 +67,7 @@ export default class MoviesList {
     return filtredMovies;
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, updatedObject) {
     // console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
@@ -76,18 +75,18 @@ export default class MoviesList {
     // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE:
-        this._moviesModel.updateMovie(updateType, update);
+        this._moviesModel.updateMovie(updateType, updatedObject);
         break;
       case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, update);
+        this._commentsModel.addComment(updateType, updatedObject);
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update);
+        this._commentsModel.deleteComment(updateType, updatedObject);
         break;
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType, updatedMovieObject) {
     // console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
@@ -96,9 +95,7 @@ export default class MoviesList {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
-        this._moviePresenter[data.id].movieUpdate(data);
-        const historyCount = this._moviesModel.movies.filter((element) => element.isWatched).length;
-        this._profilePresenter.update(historyCount, updateType);
+        this._moviePresenter[updatedMovieObject.id].movieUpdate(updatedMovieObject);
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
