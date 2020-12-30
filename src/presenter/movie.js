@@ -5,10 +5,11 @@ import {UserAction, UpdateType} from '../utils/const.js';
 import PopupPresenter from './popup.js';
 
 class Movie {
-  constructor(container, changeData, moviesModel) {
+  constructor(container, changeData, moviesModel, commentsModel) {
     this._container = container;
     this._changeData = changeData;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
     this._movieComponent = null;
 
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
@@ -35,7 +36,7 @@ class Movie {
   }
 
   _handlePopupOpenClick() {
-    const popupPresenter = new PopupPresenter(this._moviesModel);
+    const popupPresenter = new PopupPresenter(this._moviesModel, this._commentsModel);
     popupPresenter.init(this._movie, this._changeData);
   }
 

@@ -4,10 +4,11 @@ import {render, RenderPosition, remove} from '../utils/render.js';
 import CommentsPresenter from './comments.js';
 
 class PopupPresenter {
-  constructor(moviesModel) {
+  constructor(moviesModel, commentsModel) {
     this._container = document.body;
     this._popupComponent = null;
     this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
     this._handleIsWatchedClick = this._handleIsWatchedClick.bind(this);
@@ -26,7 +27,13 @@ class PopupPresenter {
     this._popupComponent = new PopupView(movie);
     const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
     const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    this._emojiesComponent = new CommentsPresenter(commentsWrap, counter);
+    this._emojiesComponent = new CommentsPresenter(
+        commentsWrap,
+        counter,
+        this._changeData,
+        this._moviesModel,
+        this._popupComponent
+    );
 
     this._setPopupHandlers();
     this._container.classList.add(`hide-overflow`);
@@ -36,7 +43,7 @@ class PopupPresenter {
       remove(this._prevPopupComponent);
     }
     render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
-    this._emojiesComponent.init(movie.comments);
+    this._emojiesComponent.init(movie);
   }
 
   _handleModelEvent(...rest) {

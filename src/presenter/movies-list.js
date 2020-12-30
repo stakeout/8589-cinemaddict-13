@@ -44,7 +44,6 @@ export default class MoviesList {
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
-    this._commentsModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
   }
 
@@ -68,6 +67,7 @@ export default class MoviesList {
   }
 
   _handleViewAction(actionType, updateType, updatedObject) {
+    // console.log(updatedObject);
     // console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
@@ -110,7 +110,12 @@ export default class MoviesList {
     }
   }
   _renderMovie(container, movie) {
-    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._moviesModel);
+    const moviePresenter = new MoviePresenter(
+        container,
+        this._handleViewAction,
+        this._moviesModel,
+        this._commentsModel
+    );
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }

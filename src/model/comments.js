@@ -5,7 +5,9 @@ export default class Comments extends Observer {
     super();
     this._comments = [];
   }
+
   addComment(updateType, update) {
+    console.log(`go to comments model`);
     this._comments = [
       update,
       ...this._comments
@@ -15,7 +17,7 @@ export default class Comments extends Observer {
   }
 
   deleteComment(updateType, update) {
-    const index = this._comments.findIndex((task) => task.id === update.id);
+    const index = this._comments.findIndex((comment) => comment.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't delete unexisting comment`);
