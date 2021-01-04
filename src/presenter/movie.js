@@ -1,14 +1,15 @@
 import MovieView from '../view/card.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {UserAction, UpdateType} from '../utils/const.js';
 
 import PopupPresenter from './popup.js';
 
-const popupPresenter = new PopupPresenter();
-
 class Movie {
-  constructor(container, changeData) {
+  constructor(container, changeData, moviesModel, commentsModel) {
     this._container = container;
     this._changeData = changeData;
+    this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
     this._movieComponent = null;
 
     this._handlePopupOpenClick = this._handlePopupOpenClick.bind(this);
@@ -28,22 +29,14 @@ class Movie {
       render(this._container.querySelector(`.films-list__container`), this._movieComponent, RenderPosition.BEFOREEND);
       return;
     }
-  }
-  movieUpdate(updatedMovie) {
-    this._movie = updatedMovie;
-    this._prevMovieComponent = this._movieComponent;
-    this._movieComponent = new MovieView(updatedMovie);
-
-    this._setMovieCardHandlers();
-
     if (this._container.querySelector(`.films-list__container`).contains(this._prevMovieComponent.getElement())) {
       replace(this._movieComponent, this._prevMovieComponent);
     }
     remove(this._prevMovieComponent);
-    // update popup
-    popupPresenter.updatePopup(updatedMovie);
   }
+
   _handlePopupOpenClick() {
+    const popupPresenter = new PopupPresenter(this._moviesModel, this._commentsModel);
     popupPresenter.init(this._movie, this._changeData);
   }
 
@@ -57,6 +50,8 @@ class Movie {
 
   _handleIsFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -68,6 +63,8 @@ class Movie {
   }
   _handleIsWatchedClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,
@@ -79,6 +76,8 @@ class Movie {
   }
   _handleIsInWatchListClick() {
     this._changeData(
+        UserAction.UPDATE,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._movie,

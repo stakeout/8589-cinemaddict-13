@@ -38,7 +38,8 @@ export default class Comment extends SmartView {
     super();
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._messageInputHandler = this._messageInputHandler.bind(this);
-    this._setInnerHandlers();
+    this._addCommentHandler = this._addCommentHandler.bind(this);
+
   }
 
   _getTemplate() {
@@ -46,38 +47,32 @@ export default class Comment extends SmartView {
   }
 
   _emojiClickHandler(evt) {
-    const emoji = evt.target.value;
     evt.preventDefault();
-    this.updateData({
-      emoji,
-    });
-    if (this._data.emoji) {
-      this._renderEmojiIcon();
-    }
+    this._callback.emojiClick(evt);
   }
-
   _messageInputHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      commentText: evt.target.value,
-    });
+    this._callback.messageInput(evt);
   }
-  _renderEmojiIcon() {
-    const container = this.getElement().querySelector(`.film-details__add-emoji-label`);
-    const iconTemplate = `<img src="images/emoji/${this._data.emoji}.png" width="55" height="55" alt="emoji-${this._data.emoji}">`;
-    container.innerHTML = iconTemplate;
+  _addCommentHandler(evt) {
+    this._callback.addComment(evt);
   }
-  _setInnerHandlers() {
+  setEmojiClickHandler(cb) {
+    this._callback.emojiClick = cb;
     this.getElement()
-        .querySelector(`.film-details__emoji-list`)
-        .addEventListener(`change`, this._emojiClickHandler);
+    .querySelector(`.film-details__emoji-list`)
+    .addEventListener(`change`, this._emojiClickHandler);
+  }
+  setMessageInputHandler(cb) {
+    this._callback.messageInput = cb;
     this.getElement()
         .querySelector(`.film-details__comment-input`)
         .addEventListener(`input`, this._messageInputHandler);
   }
-  restoreHandlers() {
-    delete this._data.emoji;
-    delete this._data.commentText;
-    this._setInnerHandlers();
+  setAddCommentHandler(cb) {
+    this._callback.addComment = cb;
+    this.getElement()
+        .querySelector(`.film-details__comment-input`)
+        .addEventListener(`keydown`, this._addCommentHandler);
   }
 }

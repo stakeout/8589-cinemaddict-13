@@ -155,15 +155,16 @@ export default class Popup extends SmartView {
 
   setIsInWatchListClickHandler(cb) {
     this._callback.isInWatchListClick = cb;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._isInWatchListClickHandler);
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._isInWatchListClickHandler);
   }
+
   setIsWatchedClickHandler(cb) {
     this._callback.isWatchedClick = cb;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._isWatchedClickHandler);
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, this._isWatchedClickHandler);
   }
   setIsFavoriteClickHandler(cb) {
     this._callback.isFavoriteClick = cb;
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._isFavoriteClickHandler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._isFavoriteClickHandler);
   }
   setCloseBtnClickHandler(cb) {
     this._callback.closeBtnClick = cb;

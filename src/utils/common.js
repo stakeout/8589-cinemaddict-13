@@ -30,19 +30,6 @@ const formatDurationTime = (durationTime) => {
   return (hours > 0) ? `${hours}h ${minutes}m` : `${minutes}m`;
 };
 
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};
-
 const sortMoviesByDate = (a, b) => {
 
   return dayjs(b.releaseDate).diff(dayjs(a.releaseDate));
@@ -60,7 +47,6 @@ export {
   getRandomIndex,
   dayjs,
   formatDurationTime,
-  updateItem,
   sortMoviesByDate,
   sortMoviesByRating,
 };

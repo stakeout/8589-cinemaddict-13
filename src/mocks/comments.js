@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import {dayjs, getRandomIndex} from '../utils/common.js';
 
 const authors = [
@@ -28,8 +29,10 @@ const generateComment = () => {
   const emoji = getRandomIndex(emojies);
   const comment = getRandomIndex(comments);
   const dateCreation = dayjs.recent(3).fromNow();
+  const id = nanoid(3);
 
   return {
+    id,
     author,
     emoji,
     comment,

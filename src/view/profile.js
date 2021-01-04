@@ -13,11 +13,11 @@ const showUserStatus = (num) => {
 import AbstractView from './abstract.js';
 
 const createProfileTemplate = (historyCount) => {
-  const userRating = showUserStatus(historyCount);
+  const isUserRating = showUserStatus(historyCount);
 
   return `
     <section class="header__profile profile">
-      ${userRating ? `<p class="profile__rating">${userRating}</p>` : ``}
+      ${isUserRating ? `<p class="profile__rating">${isUserRating}</p>` : ``}
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>
   `.trim();
