@@ -13,10 +13,18 @@ import MoviesModel from './model/movies.js';
 import FilterModel from './model/filter.js';
 import CommentsModel from './model/comments.js';
 
+import Api from './api.js';
+
 const CARDS_AMOUNT = 5;
+const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
+const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
 const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
+const api = new Api(END_POINT, AUTHORIZATION);
 
+api.movies.then((movies) => {
+  console.log(movies);
+});
 // console.log(data);
 const moviesModel = new MoviesModel();
 const filtersModel = new FilterModel();
