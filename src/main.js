@@ -3,8 +3,6 @@ import MainNavContainerView from './view/main-navigation.js';
 import StatsView from './view/stats.js';
 import FooterStatsView from './view/footer-stats.js';
 
-import {generateMovieObject} from './mocks/card.js';
-
 import MoviesBoardPresenter from './presenter/movies-list.js';
 import FilterPresenter from './presenter/filter.js';
 import ProfilePresenter from './presenter/profile.js';
@@ -15,21 +13,14 @@ import CommentsModel from './model/comments.js';
 
 import Api from './api.js';
 
-const CARDS_AMOUNT = 5;
 const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
-const data = new Array(CARDS_AMOUNT).fill().map(generateMovieObject);
 const api = new Api(END_POINT, AUTHORIZATION);
 
-api.movies.then((movies) => {
-  console.log(movies);
-});
-// console.log(data);
 const moviesModel = new MoviesModel();
 const filtersModel = new FilterModel();
 const commentsModel = new CommentsModel();
-moviesModel.movies = data;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -45,4 +36,9 @@ render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, commentsModel).init();
 
 const footerStats = document.querySelector(`.footer__statistics`);
-render(footerStats, new FooterStatsView(data.length), RenderPosition.BEFOREEND);
+render(footerStats, new FooterStatsView(moviesModel.movies.length), RenderPosition.BEFOREEND);
+
+api.movies.then((movies) => {
+  // console.log(movies);
+  moviesModel.movies = movies;
+});
