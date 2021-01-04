@@ -12,8 +12,13 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
+const serverUrl = {
+  URL: `https://13.ecmascript.pages.academy/cinemaddict`,
+  AUTH: `Basic fgh7et5kb90ga8`,
+};
+
 export default class Api {
-  constructor(endPoint, authorization) {
+  constructor(endPoint = serverUrl.URL, authorization = serverUrl.AUTH) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
@@ -22,6 +27,16 @@ export default class Api {
     return this._load({url: `movies`})
       .then(Api.toJSON)
       .then((movies) => movies.map(MoviesModel.adaptToClient));
+  }
+
+  get comments() {
+    return this._load({url: `comments/${this._movieId}`})
+      .then(Api.toJSON)
+      .then((comments) => comments);
+  }
+
+  set movieId(id) {
+    this._movieId = id;
   }
 
   updateTask(movie) {

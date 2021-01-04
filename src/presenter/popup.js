@@ -2,13 +2,18 @@ import PopupView from '../view/film-details-popup.js';
 import {UserAction, UpdateType} from '../utils/const.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import CommentsPresenter from './comments.js';
+import CommentsModel from '../model/comments.js';
+
+import Api from '../api.js';
+
+const api = new Api();
 
 class PopupPresenter {
-  constructor(moviesModel, commentsModel) {
+  constructor(moviesModel) {
     this._container = document.body;
     this._popupComponent = null;
     this._moviesModel = moviesModel;
-    this._commentsModel = commentsModel;
+    this._commentsModel = new CommentsModel();
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
     this._handleIsWatchedClick = this._handleIsWatchedClick.bind(this);
@@ -21,6 +26,9 @@ class PopupPresenter {
   }
 
   init(movie, changeData) {
+    const {id} = movie;
+    api.movieId = id;
+
     this._movie = movie;
     this._changeData = changeData;
     this._prevPopupComponent = this._popupComponent;
@@ -34,6 +42,14 @@ class PopupPresenter {
         this._moviesModel,
         this._popupComponent
     );
+    api.comments
+    .then((comments) => {
+      this._commentsModel.comments = comments;
+      this._emojiesComponent.init(comments);
+    })
+    .catch(() => {
+      this._commentsModel.comments = [];
+    });
 
     this._setPopupHandlers();
     this._container.classList.add(`hide-overflow`);
@@ -43,7 +59,6 @@ class PopupPresenter {
       remove(this._prevPopupComponent);
     }
     render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
-    this._emojiesComponent.init(movie);
   }
 
   _handleModelEvent(...rest) {

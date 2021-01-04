@@ -10,18 +10,18 @@ import ProfilePresenter from './presenter/profile.js';
 
 import MoviesModel from './model/movies.js';
 import FilterModel from './model/filter.js';
-import CommentsModel from './model/comments.js';
+// import CommentsModel from './model/comments.js';
 
 import Api from './api.js';
 
-const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
-const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+// const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
+// const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new Api();
 
 const moviesModel = new MoviesModel();
 const filtersModel = new FilterModel();
-const commentsModel = new CommentsModel();
+// const commentsModel = new CommentsModel();
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -34,15 +34,16 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 new FilterPresenter(mainNav, filtersModel, moviesModel).init();
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 
-new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, commentsModel).init();
+new MoviesBoardPresenter(mainElement, moviesModel, filtersModel).init();
 
 const footerStats = document.querySelector(`.footer__statistics`);
 render(footerStats, new FooterStatsView(moviesModel.movies.length), RenderPosition.BEFOREEND);
 
 api.movies
   .then((movies) => {
+    // console.log(movies);
     moviesModel.setMovies(UpdateType.INIT, movies);
   })
   .catch(() => {
-    moviesModel.setTasks(UpdateType.INIT, []);
+    moviesModel.setMovies(UpdateType.INIT, []);
   });
