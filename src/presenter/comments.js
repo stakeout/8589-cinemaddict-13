@@ -27,10 +27,8 @@ export default class CommentsPresenter extends SmartView {
   }
 
   init(movie) {
-    console.log(movie);
     this._movie = movie;
     this._comments = movie.comments.slice();
-    // this._commentsModel.comments = this._comments;
     this._commentsCounter.textContent = movie.comments.length;
     this._renderCommentsList();
     this._renderEmojies();

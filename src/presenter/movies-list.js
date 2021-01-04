@@ -4,6 +4,7 @@ import FilmsContainerView from '../view/films-wrapper.js';
 import AllMoviesView from '../view/all-movies.js';
 import ShowMoreButtonView from '../view/show-more-btn.js';
 import NoMoviesView from '../view/no-movies.js';
+import LoadingView from '../view/loading.js';
 
 import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
@@ -28,10 +29,12 @@ export default class MoviesList {
     this._filtersModel = filtersModel;
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._isLoading = true;
 
     this._fimsContainerComponent = new FilmsContainerView();
     this._allMoviesComponent = new AllMoviesView();
     this._noMoviesComponent = new NoMoviesView();
+    this._loadingComponent = new LoadingView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -107,6 +110,11 @@ export default class MoviesList {
         this._clearMoviesList({resetRenderedCardsCount: true, resetSortType: true});
         this._renderBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderBoard();
+        break;
     }
   }
   _renderMovie(container, movie) {
@@ -166,6 +174,10 @@ export default class MoviesList {
     render(this._containerElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    render(this._fimsContainerComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderNoMovies() {
     render(this._fimsContainerComponent, this._noMoviesComponent, RenderPosition.BEFOREEND);
   }
@@ -210,6 +222,7 @@ export default class MoviesList {
     remove(this._sortComponent);
     remove(this._allMoviesComponent);
     remove(this._noMoviesComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedCardsCount) {
@@ -227,6 +240,11 @@ export default class MoviesList {
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const movies = this._getMovies();
     const moviesAmount = movies.length;
 
