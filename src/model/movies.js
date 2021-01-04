@@ -53,6 +53,7 @@ export default class Movies extends Observer {
           screenwriters: movie[`film_info`].writers,
           title: movie[`film_info`].title,
           totalRating: movie[`film_info`].total_rating,
+          watchingDate: movie[`user_details`].watching_date,
         }
     );
 
@@ -90,6 +91,7 @@ export default class Movies extends Observer {
             'favorite': movie.isFavorite,
             'watchlist': movie.isInWatchList,
             'already_watched': movie.isWatched,
+            'watching_date': movie.watchingDate,
           }
         }
     );

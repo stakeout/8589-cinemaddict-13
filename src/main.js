@@ -25,6 +25,7 @@ const filtersModel = new FilterModel();
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const footerStats = document.querySelector(`.footer__statistics`);
 
 new ProfilePresenter(headerElement, moviesModel).init();
 render(mainElement, new MainNavContainerView(), RenderPosition.BEFOREEND);
@@ -34,16 +35,14 @@ const mainNav = mainElement.querySelector(`.main-navigation`);
 new FilterPresenter(mainNav, filtersModel, moviesModel).init();
 render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
 
-new MoviesBoardPresenter(mainElement, moviesModel, filtersModel).init();
-
-const footerStats = document.querySelector(`.footer__statistics`);
-render(footerStats, new FooterStatsView(moviesModel.movies.length), RenderPosition.BEFOREEND);
+new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, api).init();
 
 api.movies
   .then((movies) => {
-    // console.log(movies);
     moviesModel.setMovies(UpdateType.INIT, movies);
+    render(footerStats, new FooterStatsView(movies.length), RenderPosition.BEFOREEND);
   })
   .catch(() => {
     moviesModel.setMovies(UpdateType.INIT, []);
   });
+

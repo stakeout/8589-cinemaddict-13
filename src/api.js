@@ -39,7 +39,7 @@ export default class Api {
     this._movieId = id;
   }
 
-  updateTask(movie) {
+  updateMovie(movie) {
     return this._load({
       url: `movies/${movie.id}`,
       method: Method.PUT,

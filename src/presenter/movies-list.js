@@ -22,10 +22,10 @@ const CARDS_EXTRA_AMOUNT = 2;
 // const headerElement = document.querySelector(`.header`);
 
 export default class MoviesList {
-  constructor(parentContainer, moviesModel, filtersModel, commentsModel) {
+  constructor(parentContainer, moviesModel, filtersModel, api) {
     this._containerElement = parentContainer;
     this._moviesModel = moviesModel;
-    this._commentsModel = commentsModel;
+    this._api = api;
     this._filtersModel = filtersModel;
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -70,15 +70,11 @@ export default class MoviesList {
   }
 
   _handleViewAction(actionType, updateType, updatedObject) {
-    // console.log(updatedObject);
-    // console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE:
-        this._moviesModel.updateMovie(updateType, updatedObject);
+        this._api.updateMovie(updatedObject).then((response) => {
+          this._moviesModel.updateMovie(updateType, response);
+        });
         break;
       case UserAction.ADD_COMMENT:
         this._commentsModel.addComment(updateType, updatedObject);
@@ -90,23 +86,15 @@ export default class MoviesList {
   }
 
   _handleModelEvent(updateType, updatedMovieObject) {
-    // console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
         this._clearMoviesList();
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this._clearMoviesList({resetRenderedCardsCount: true, resetSortType: true});
         this._renderBoard();
         break;
