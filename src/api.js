@@ -1,5 +1,8 @@
 import MoviesModel from "./model/movies.js";
 
+const ENDPOINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
+
 const Method = {
   GET: `GET`,
   PUT: `PUT`,
@@ -9,16 +12,11 @@ const Method = {
 
 const SuccessHTTPStatusRange = {
   MIN: 200,
-  MAX: 299
-};
-
-const serverUrl = {
-  URL: `https://13.ecmascript.pages.academy/cinemaddict`,
-  AUTH: `Basic fgh7et5kb90ga8`,
+  MAX: 299,
 };
 
 export default class Api {
-  constructor(endPoint = serverUrl.URL, authorization = serverUrl.AUTH) {
+  constructor(endPoint = ENDPOINT, authorization = AUTHORIZATION) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
@@ -37,6 +35,7 @@ export default class Api {
 
   set movieId(id) {
     this._movieId = id;
+    // console.log(this._movieId);
   }
 
   updateMovie(movie) {
@@ -48,6 +47,26 @@ export default class Api {
     })
       .then(Api.toJSON)
       .then(MoviesModel.adaptToClient);
+  }
+
+  addComment(movieId, newComment) {
+    console.log(movieId);
+    return this._load({
+      url: `comments/${movieId}`,
+      method: Method.POST,
+      body: JSON.stringify(newComment),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then((response) => response);
+      // .then((response) => console.log(response));
+  }
+
+  deleteComment(task) {
+    return this._load({
+      url: `tasks/${task.id}`,
+      method: Method.DELETE
+    });
   }
 
   _load({

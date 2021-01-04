@@ -3,17 +3,11 @@ import Observer from "../utils/observer.js";
 export default class Comments extends Observer {
   constructor() {
     super();
-    this._comments = [];
+    this._movies = [];
   }
 
-  addComment(updateType, update) {
-    console.log(`go to comments model`);
-    this._comments = [
-      update,
-      ...this._comments
-    ];
-
-    this._notify(updateType, update);
+  addComment(updateType, newMovieObject) {
+    this._notify(updateType, newMovieObject);
   }
 
   deleteComment(updateType, update) {
@@ -31,8 +25,8 @@ export default class Comments extends Observer {
     this._notify(updateType);
   }
 
-  set comments(comments) {
-    this._comments = comments.slice();
+  set movies(movies) {
+    this._movies = movies.slice();
 
     // this._notify(updateType);
 

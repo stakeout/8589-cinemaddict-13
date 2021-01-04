@@ -2,18 +2,17 @@ import PopupView from '../view/film-details-popup.js';
 import {UserAction, UpdateType} from '../utils/const.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import CommentsPresenter from './comments.js';
-import CommentsModel from '../model/comments.js';
 
 import Api from '../api.js';
 
 const api = new Api();
 
 class PopupPresenter {
-  constructor(moviesModel) {
+  constructor(moviesModel, commentsModel) {
     this._container = document.body;
     this._popupComponent = null;
     this._moviesModel = moviesModel;
-    this._commentsModel = new CommentsModel();
+    this._commentsModel = commentsModel;
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
     this._handleIsWatchedClick = this._handleIsWatchedClick.bind(this);
@@ -39,13 +38,13 @@ class PopupPresenter {
         commentsWrap,
         counter,
         this._changeData,
-        this._moviesModel,
+        this._commentsModel,
         this._popupComponent
     );
     api.comments
     .then((comments) => {
-      this._commentsModel.comments = comments;
-      this._emojiesComponent.init(comments);
+      // this._commentsModel.comments = comments;
+      this._emojiesComponent.init(comments, id);
     })
     .catch(() => {
       this._commentsModel.comments = [];

@@ -1,4 +1,4 @@
-import {nanoid} from 'nanoid';
+// import {nanoid} from 'nanoid';
 import SmartView from '../view/smart.js';
 import CommentView from '../view/comment.js';
 import EmojiesComponent from '../view/add-comment.js';
@@ -22,11 +22,14 @@ export default class CommentsPresenter extends SmartView {
     this.restoreHandlers = this.restoreHandlers.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    // this._commentsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
   }
 
-  init(comments) {
+  init(comments, id) {
     // this._movie = movie;
+    // console.log(id, comments);
+    this._data.id = id;
+    this._data.date = new Date();
     this._comments = comments.slice();
     this._commentsCounter.textContent = comments.length;
     this._renderCommentsList();
@@ -54,15 +57,17 @@ export default class CommentsPresenter extends SmartView {
 
   _renderEmojiIcon() {
     const container = this._emojiesComponent.getElement().querySelector(`.film-details__add-emoji-label`);
-    const iconTemplate = `<img src="images/emoji/${this._data.emoji}.png" width="55" height="55" alt="emoji-${this._data.emoji}">`;
+    const iconTemplate = `<img src="images/emoji/${this._data.emotion}.png" width="55" height="55" alt="emoji-${this._data.emoji}">`;
     container.innerHTML = iconTemplate;
   }
 
   _handleModelEvent(updateType, updatedMovieObject) {
+    const {comments, movie: {id}} = updatedMovieObject;
+
     switch (updateType) {
       case UpdateType.PATCH:
         this._clearCommentsList();
-        this.init(updatedMovieObject);
+        this.init(comments, id);
         break;
       case UpdateType.MINOR:
         break;
@@ -70,12 +75,12 @@ export default class CommentsPresenter extends SmartView {
   }
 
   _emojiClickHandler(evt) {
-    const emoji = evt.target.value;
+    const emotion = evt.target.value;
     evt.preventDefault();
     this.updateData({
-      emoji,
+      emotion,
     });
-    if (this._data.emoji) {
+    if (this._data.emotion) {
       this._renderEmojiIcon();
     }
   }
@@ -96,23 +101,10 @@ export default class CommentsPresenter extends SmartView {
   _handleAddComment(evt) {
     if (evt.ctrlKey && evt.key === `Enter`) {
       this._changeData(
-          UserAction.UPDATE,
+          UserAction.ADD_COMMENT,
           UpdateType.PATCH,
-          Object.assign(
-              {},
-              this._movie,
-              this._movie.comments.unshift(
-                  Object.assign(
-                      {},
-                      this._data,
-                      {
-                        id: nanoid(3),
-                        author: `Vadim`,
-                        dateCreation: new Date()
-                      }
-                  )
-              )
-          ));
+          this._data
+      );
     }
   }
 
