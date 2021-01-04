@@ -21,8 +21,10 @@ export default class Movies extends Observer {
     this._notify(updateType, updatedMovieObject);
   }
 
-  set movies(movies) {
+  setMovies(updateType, movies) {
     this._movies = movies.slice();
+
+    this._notify(updateType);
   }
 
   get movies() {

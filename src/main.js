@@ -1,4 +1,5 @@
 import {render, RenderPosition} from './utils/render.js';
+import {UpdateType} from './utils/const.js';
 import MainNavContainerView from './view/main-navigation.js';
 import StatsView from './view/stats.js';
 import FooterStatsView from './view/footer-stats.js';
@@ -38,7 +39,10 @@ new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, commentsModel).
 const footerStats = document.querySelector(`.footer__statistics`);
 render(footerStats, new FooterStatsView(moviesModel.movies.length), RenderPosition.BEFOREEND);
 
-api.movies.then((movies) => {
-  // console.log(movies);
-  moviesModel.movies = movies;
-});
+api.movies
+  .then((movies) => {
+    moviesModel.setMovies(UpdateType.INIT, movies);
+  })
+  .catch(() => {
+    moviesModel.setTasks(UpdateType.INIT, []);
+  });
