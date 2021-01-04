@@ -1,5 +1,4 @@
 import {nanoid} from 'nanoid';
-// import {dayjs} from '../utils/common.js';
 import SmartView from '../view/smart.js';
 import CommentView from '../view/comment.js';
 import EmojiesComponent from '../view/add-comment.js';
@@ -23,15 +22,13 @@ export default class CommentsPresenter extends SmartView {
     this.restoreHandlers = this.restoreHandlers.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._commentsModel.addObserver(this._handleModelEvent);
+    // this._commentsModel.addObserver(this._handleModelEvent);
   }
 
-  init(movie) {
-    console.log(movie);
-    this._movie = movie;
-    this._comments = movie.comments.slice();
-    // this._commentsModel.comments = this._comments;
-    this._commentsCounter.textContent = movie.comments.length;
+  init(comments) {
+    // this._movie = movie;
+    this._comments = comments.slice();
+    this._commentsCounter.textContent = comments.length;
     this._renderCommentsList();
     this._renderEmojies();
   }
@@ -64,9 +61,6 @@ export default class CommentsPresenter extends SmartView {
   _handleModelEvent(updateType, updatedMovieObject) {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        // this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
-        console.log(`came back to _handleModelEvent`);
         this._clearCommentsList();
         this.init(updatedMovieObject);
         break;
@@ -76,7 +70,6 @@ export default class CommentsPresenter extends SmartView {
   }
 
   _emojiClickHandler(evt) {
-    console.log(`emoji click`);
     const emoji = evt.target.value;
     evt.preventDefault();
     this.updateData({
@@ -88,7 +81,6 @@ export default class CommentsPresenter extends SmartView {
   }
 
   _messageInputHandler(evt) {
-    console.log(`input message`);
     evt.preventDefault();
     this.updateData({
       comment: evt.target.value,
@@ -96,7 +88,6 @@ export default class CommentsPresenter extends SmartView {
   }
 
   restoreHandlers() {
-    console.log(`set handlers`);
     this._emojiesComponent.setEmojiClickHandler(this._emojiClickHandler);
     this._emojiesComponent.setMessageInputHandler(this._messageInputHandler);
     this._emojiesComponent.setAddCommentHandler(this._handleAddComment);

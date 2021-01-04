@@ -33,6 +33,9 @@ export default class Comments extends Observer {
 
   set comments(comments) {
     this._comments = comments.slice();
+
+    // this._notify(updateType);
+
   }
 
   get comments() {

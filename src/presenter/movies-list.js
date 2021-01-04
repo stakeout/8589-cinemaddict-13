@@ -4,6 +4,7 @@ import FilmsContainerView from '../view/films-wrapper.js';
 import AllMoviesView from '../view/all-movies.js';
 import ShowMoreButtonView from '../view/show-more-btn.js';
 import NoMoviesView from '../view/no-movies.js';
+import LoadingView from '../view/loading.js';
 
 import TopRatedView from '../view/top-rated.js';
 import MostCommentedView from '../view/most-commented.js';
@@ -21,17 +22,19 @@ const CARDS_EXTRA_AMOUNT = 2;
 // const headerElement = document.querySelector(`.header`);
 
 export default class MoviesList {
-  constructor(parentContainer, moviesModel, filtersModel, commentsModel) {
+  constructor(parentContainer, moviesModel, filtersModel, api) {
     this._containerElement = parentContainer;
     this._moviesModel = moviesModel;
-    this._commentsModel = commentsModel;
+    this._api = api;
     this._filtersModel = filtersModel;
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._isLoading = true;
 
     this._fimsContainerComponent = new FilmsContainerView();
     this._allMoviesComponent = new AllMoviesView();
     this._noMoviesComponent = new NoMoviesView();
+    this._loadingComponent = new LoadingView();
     this._renderedCardsCount = CARDS_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -67,15 +70,11 @@ export default class MoviesList {
   }
 
   _handleViewAction(actionType, updateType, updatedObject) {
-    // console.log(updatedObject);
-    // console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE:
-        this._moviesModel.updateMovie(updateType, updatedObject);
+        this._api.updateMovie(updatedObject).then((response) => {
+          this._moviesModel.updateMovie(updateType, response);
+        });
         break;
       case UserAction.ADD_COMMENT:
         this._commentsModel.addComment(updateType, updatedObject);
@@ -87,24 +86,21 @@ export default class MoviesList {
   }
 
   _handleModelEvent(updateType, updatedMovieObject) {
-    // console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
         this._clearMoviesList();
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this._clearMoviesList({resetRenderedCardsCount: true, resetSortType: true});
+        this._renderBoard();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderBoard();
         break;
     }
@@ -166,6 +162,10 @@ export default class MoviesList {
     render(this._containerElement, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    render(this._fimsContainerComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderNoMovies() {
     render(this._fimsContainerComponent, this._noMoviesComponent, RenderPosition.BEFOREEND);
   }
@@ -210,6 +210,7 @@ export default class MoviesList {
     remove(this._sortComponent);
     remove(this._allMoviesComponent);
     remove(this._noMoviesComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedCardsCount) {
@@ -227,6 +228,11 @@ export default class MoviesList {
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const movies = this._getMovies();
     const moviesAmount = movies.length;
 

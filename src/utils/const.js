@@ -1,7 +1,7 @@
 export const SortType = {
   DEFAULT: `default`,
   DATE: `date`,
-  RATING: `rating`
+  RATING: `rating`,
 };
 
 export const UserAction = {
@@ -13,12 +13,13 @@ export const UserAction = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`,
 };
 
 export const FilterType = {
   ALL: `All`,
   WATCHLIST: `Watchlist`,
   HISTORY: `History`,
-  FAVORITES: `Favorites`
+  FAVORITES: `Favorites`,
 };
