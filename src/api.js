@@ -1,4 +1,5 @@
-import MoviesModel from "./model/movies.js";
+import MoviesModel from './model/movies.js';
+import CommentsModel from './model/comments.js';
 
 const ENDPOINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
@@ -35,7 +36,6 @@ export default class Api {
 
   set movieId(id) {
     this._movieId = id;
-    // console.log(this._movieId);
   }
 
   updateMovie(movie) {
@@ -49,17 +49,15 @@ export default class Api {
       .then(MoviesModel.adaptToClient);
   }
 
-  addComment(movieId, newComment) {
-    console.log(movieId);
+  addComment(movieId, movieObject) {
     return this._load({
       url: `comments/${movieId}`,
       method: Method.POST,
-      body: JSON.stringify(newComment),
+      body: JSON.stringify(movieObject),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON)
-      .then((response) => response);
-      // .then((response) => console.log(response));
+      .then(CommentsModel.adaptToClient);
   }
 
   deleteComment(task) {

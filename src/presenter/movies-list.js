@@ -51,7 +51,7 @@ export default class MoviesList {
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
-    // this._commentsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
 
   }
 
@@ -85,7 +85,6 @@ export default class MoviesList {
         this._api.addComment(updatedObject.id, updatedObject).then((response) => {
           this._commentsModel.addComment(updateType, response);
         });
-        // this._commentsModel.addComment(updateType, updatedObject);
         break;
       case UserAction.DELETE_COMMENT:
         this._commentsModel.deleteComment(updateType, updatedObject);
@@ -97,6 +96,9 @@ export default class MoviesList {
     switch (updateType) {
       case UpdateType.PATCH:
         this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
+        break;
+      case UpdateType.PATCH_COMMENT:
+        this._moviePresenter[updatedMovieObject.movie.id].init(updatedMovieObject.movie);
         break;
       case UpdateType.MINOR:
         this._clearMoviesList();

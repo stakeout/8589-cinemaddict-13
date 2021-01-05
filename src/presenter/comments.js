@@ -63,9 +63,8 @@ export default class CommentsPresenter extends SmartView {
 
   _handleModelEvent(updateType, updatedMovieObject) {
     const {comments, movie: {id}} = updatedMovieObject;
-
     switch (updateType) {
-      case UpdateType.PATCH:
+      case UpdateType.PATCH_COMMENT:
         this._clearCommentsList();
         this.init(comments, id);
         break;
@@ -102,7 +101,7 @@ export default class CommentsPresenter extends SmartView {
     if (evt.ctrlKey && evt.key === `Enter`) {
       this._changeData(
           UserAction.ADD_COMMENT,
-          UpdateType.PATCH,
+          UpdateType.PATCH_COMMENT,
           this._data
       );
     }
