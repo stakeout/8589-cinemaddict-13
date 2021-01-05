@@ -60,9 +60,9 @@ export default class Api {
       .then(CommentsModel.adaptToClient);
   }
 
-  deleteComment(task) {
+  deleteComment(movieId) {
     return this._load({
-      url: `tasks/${task.id}`,
+      url: `comments/${movieId}`,
       method: Method.DELETE
     });
   }

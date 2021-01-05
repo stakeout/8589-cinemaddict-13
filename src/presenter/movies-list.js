@@ -82,23 +82,31 @@ export default class MoviesList {
         });
         break;
       case UserAction.ADD_COMMENT:
+        console.log(updateType);
         this._api.addComment(updatedObject.id, updatedObject).then((response) => {
           this._commentsModel.addComment(updateType, response);
         });
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, updatedObject);
+        this._api.deleteComment(updatedObject).then(() => {
+          this._commentsModel.deleteComment(updateType);
+        });
         break;
     }
   }
 
   _handleModelEvent(updateType, updatedMovieObject) {
+    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
         break;
       case UpdateType.PATCH_COMMENT:
+        console.log(`add comment`);
         this._moviePresenter[updatedMovieObject.movie.id].init(updatedMovieObject.movie);
+        break;
+      case UpdateType.PATCH_DELETE_COMMENT:
+        console.log(`delete comment`);
         break;
       case UpdateType.MINOR:
         this._clearMoviesList();
@@ -173,6 +181,7 @@ export default class MoviesList {
   }
 
   _renderLoading() {
+    render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
     render(this._fimsContainerComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 

@@ -43,7 +43,7 @@ class PopupPresenter {
     );
     api.comments
     .then((comments) => {
-      // this._commentsModel.comments = comments;
+      this._commentsModel.comments = comments;
       this._emojiesComponent.init(comments, id);
     })
     .catch(() => {

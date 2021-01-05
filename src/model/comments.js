@@ -3,6 +3,7 @@ import Observer from '../utils/observer.js';
 export default class Comments extends Observer {
   constructor() {
     super();
+    this._comments = [];
   }
 
   addComment(updateType, newMovieObject) {
@@ -10,8 +11,12 @@ export default class Comments extends Observer {
   }
 
   deleteComment(updateType) {
-
     this._notify(updateType);
+  }
+
+  set comments(comments) {
+    console.log(comments);
+    this._comments = comments;
   }
 
   get comments() {

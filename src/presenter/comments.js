@@ -2,7 +2,7 @@
 import SmartView from '../view/smart.js';
 import CommentView from '../view/comment.js';
 import EmojiesComponent from '../view/add-comment.js';
-import {render, RenderPosition} from '../utils/render.js';
+import {render, remove, RenderPosition} from '../utils/render.js';
 import {UpdateType, UserAction} from '../utils/const.js';
 
 export default class CommentsPresenter extends SmartView {
@@ -12,7 +12,7 @@ export default class CommentsPresenter extends SmartView {
     this._container = commentsWrap;
     this._commentsCounter = commentsCounter;
     this._changeData = changeData;
-    this._commentsModel = commentsModel; // вместо коментс модели здесь сейчас мувис модель
+    this._commentsModel = commentsModel;
     this._emojiesComponent = new EmojiesComponent();
 
     this._handleAddComment = this._handleAddComment.bind(this);
@@ -26,8 +26,6 @@ export default class CommentsPresenter extends SmartView {
   }
 
   init(comments, id) {
-    // this._movie = movie;
-    // console.log(id, comments);
     this._data.id = id;
     this._data.date = new Date();
     this._comments = comments.slice();
@@ -37,9 +35,9 @@ export default class CommentsPresenter extends SmartView {
   }
 
   _renderComment(comment) {
-    this._commentComponent = new CommentView(comment, this._commentsCounter);
+    this._commentComponent = new CommentView(comment);
     render(this._container.querySelector(`.film-details__comments-list`), this._commentComponent, RenderPosition.BEFOREEND);
-    this._commentComponent.setCommentDeleteHandler();
+    this._commentComponent.setCommentDeleteHandler(this._handleDeleteComment);
   }
 
   _clearCommentsList() {
@@ -106,18 +104,19 @@ export default class CommentsPresenter extends SmartView {
       );
     }
   }
+  _removeComment() {
+    this._commentsModel.removeObserver(this._handleModelEvent);
+    this._commentsCounter.textContent -= 1;
+    remove(this._commentComponent);
+  }
 
-  _handleDeleteComment() {
+  _handleDeleteComment({target}) {
+    const id = target.dataset.id;
+    this._removeComment();
     this._changeData(
         UserAction.DELETE_COMMENT,
-        UpdateType.PATCH,
-        Object.assign(
-            {},
-            this._movie,
-            {
-              isWatched: !this._movie.isWatched
-            }
-        )
+        UpdateType.INIT,
+        id
     );
   }
 }
