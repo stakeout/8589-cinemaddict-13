@@ -1,9 +1,11 @@
 import Observer from '../utils/observer.js';
+// import Api from '../api.js';
 
 export default class Comments extends Observer {
   constructor() {
     super();
     this._comments = [];
+    // this._api = new Api();
   }
 
   addComment(updateType, newMovieObject) {
@@ -14,8 +16,7 @@ export default class Comments extends Observer {
     this._notify(updateType);
   }
 
-  set comments(comments) {
-    console.log(comments);
+  setComments(comments) {
     this._comments = comments;
   }
 

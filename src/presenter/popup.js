@@ -1,18 +1,25 @@
 import PopupView from '../view/film-details-popup.js';
+import CommentView from '../view/comment.js';
+import EmojiesView from '../view/add-comment.js';
 import {UserAction, UpdateType} from '../utils/const.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
-import CommentsPresenter from './comments.js';
+// import CommentsPresenter from './comments.js';
 
 import Api from '../api.js';
 
 const api = new Api();
 
 class PopupPresenter {
-  constructor(moviesModel, commentsModel) {
+  constructor(movie, changeData, moviesModel, commentsModel) {
+    // super();
     this._container = document.body;
     this._popupComponent = null;
+    this._changeData = changeData;
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
+    this._movie = movie;
+    // this._commentsModel.setComments(movie);
+    this._emojiesComponent = new EmojiesView();
 
     this._handleIsFavoriteClick = this._handleIsFavoriteClick.bind(this);
     this._handleIsWatchedClick = this._handleIsWatchedClick.bind(this);
@@ -21,34 +28,15 @@ class PopupPresenter {
     this._closeBtnHandler = this._closeBtnHandler.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
+
     this._moviesModel.addObserver(this._handleModelEvent);
   }
 
-  init(movie, changeData) {
-    const {id} = movie;
-    api.movieId = id;
-
-    this._movie = movie;
-    this._changeData = changeData;
+  init() {
     this._prevPopupComponent = this._popupComponent;
-    this._popupComponent = new PopupView(movie);
-    const counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
-    const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
-    this._emojiesComponent = new CommentsPresenter(
-        commentsWrap,
-        counter,
-        this._changeData,
-        this._commentsModel,
-        this._popupComponent
-    );
-    api.comments
-    .then((comments) => {
-      this._commentsModel.comments = comments;
-      this._emojiesComponent.init(comments, id);
-    })
-    .catch(() => {
-      this._commentsModel.comments = [];
-    });
+    this._popupComponent = new PopupView(this._movie);
+    this._counter = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
 
     this._setPopupHandlers();
     this._container.classList.add(`hide-overflow`);
@@ -58,6 +46,11 @@ class PopupPresenter {
       remove(this._prevPopupComponent);
     }
     render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
+    api.getComments(this._movie.id).then((comments) => {
+      this._commentsModel.setComments(comments);
+      this._renderCommentsList(comments);
+    });
+    this._renderEmojies();
   }
 
   _handleModelEvent(...rest) {
@@ -134,6 +127,94 @@ class PopupPresenter {
   //   document.body.classList.remove(`hide-overflow`);
   //   document.removeEventListener(`keydown`, this._escHandler);
   // }
+
+  _renderComment(comment) {
+    this._commentComponent = new CommentView(comment);
+    render(this._container.querySelector(`.film-details__comments-list`), this._commentComponent, RenderPosition.BEFOREEND);
+    this._commentComponent.setCommentDeleteHandler(this._handleDeleteComment);
+  }
+
+  _clearCommentsList() {
+    this._popupComponent.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
+  }
+
+  _renderCommentsList(comments) {
+    this._counter.textContent = comments.length;
+    comments.forEach((comment) => this._renderComment(comment));
+  }
+
+  _renderEmojies() {
+    const commentsWrap = this._popupComponent.getElement().querySelector(`.film-details__comments-wrap`);
+    this.restoreEmojiHandlers();
+    render(commentsWrap, this._emojiesComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderEmojiIcon(emotion) {
+    const container = this._emojiesComponent.getElement().querySelector(`.film-details__add-emoji-label`);
+    const iconTemplate = `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">`;
+    container.innerHTML = iconTemplate;
+  }
+
+  // _handleModelEvent(updateType, updatedMovieObject) {
+  //   const {comments, movie: {id}} = updatedMovieObject;
+  //   switch (updateType) {
+  //     case UpdateType.PATCH_COMMENT:
+  //       this._clearCommentsList();
+  //       this.init(comments, id);
+  //       break;
+  //     case UpdateType.MINOR:
+  //       break;
+  //   }
+  // }
+
+  _emojiClickHandler(evt) {
+    const emotion = evt.target.value;
+    evt.preventDefault();
+    this._emojiesComponent.updateData({
+      emotion,
+    });
+    if (emotion) {
+      this._renderEmojiIcon(emotion);
+    }
+  }
+
+  _messageInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      comment: evt.target.value,
+    });
+  }
+
+  restoreEmojiHandlers() {
+    this._emojiesComponent.setEmojiClickHandler(this._emojiClickHandler);
+    this._emojiesComponent.setMessageInputHandler(this._messageInputHandler);
+    this._emojiesComponent.setAddCommentHandler(this._handleAddComment);
+  }
+
+  _handleAddComment(evt) {
+    if (evt.ctrlKey && evt.key === `Enter`) {
+      this._changeData(
+          UserAction.ADD_COMMENT,
+          UpdateType.PATCH_COMMENT,
+          this._data
+      );
+    }
+  }
+  _removeComments() {
+    this._commentsModel.removeObserver(this._handleModelEvent);
+    this._commentsCounter.textContent -= 1;
+    remove(this._commentComponent);
+  }
+
+  _handleDeleteComment({target}) {
+    const id = target.dataset.id;
+    this._removeComment();
+    this._changeData(
+        UserAction.DELETE_COMMENT,
+        UpdateType.PATCH,
+        id
+    );
+  }
 }
 
 export default PopupPresenter;

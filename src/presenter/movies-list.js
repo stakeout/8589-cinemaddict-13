@@ -82,7 +82,6 @@ export default class MoviesList {
         });
         break;
       case UserAction.ADD_COMMENT:
-        console.log(updateType);
         this._api.addComment(updatedObject.id, updatedObject).then((response) => {
           this._commentsModel.addComment(updateType, response);
         });
@@ -101,13 +100,13 @@ export default class MoviesList {
       case UpdateType.PATCH:
         this._moviePresenter[updatedMovieObject.id].init(updatedMovieObject);
         break;
-      case UpdateType.PATCH_COMMENT:
-        console.log(`add comment`);
-        this._moviePresenter[updatedMovieObject.movie.id].init(updatedMovieObject.movie);
-        break;
-      case UpdateType.PATCH_DELETE_COMMENT:
-        console.log(`delete comment`);
-        break;
+      // case UpdateType.PATCH_COMMENT:
+      //   console.log(`add comment`);
+      //   this._moviePresenter[updatedMovieObject.movie.id].init(updatedMovieObject.movie);
+      //   break;
+      // case UpdateType.PATCH_DELETE_COMMENT:
+      //   console.log(`delete comment`);
+      //   break;
       case UpdateType.MINOR:
         this._clearMoviesList();
         this._renderBoard();

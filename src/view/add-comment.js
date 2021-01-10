@@ -33,7 +33,7 @@ const createAddCommentTemplate = () => {
   `.trim();
 };
 
-export default class Comment extends SmartView {
+export default class Emojies extends SmartView {
   constructor() {
     super();
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
