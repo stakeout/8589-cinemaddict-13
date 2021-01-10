@@ -46,10 +46,8 @@ class PopupPresenter {
       remove(this._prevPopupComponent);
     }
     render(this._container, this._popupComponent, RenderPosition.BEFOREEND);
-    api.getComments(this._movie.id).then((comments) => {
-      this._commentsModel.setComments(comments);
-      this._renderCommentsList(comments);
-    });
+
+    this._renderCommentsList();
     this._renderEmojies();
   }
 
@@ -138,9 +136,12 @@ class PopupPresenter {
     this._popupComponent.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
   }
 
-  _renderCommentsList(comments) {
-    this._counter.textContent = comments.length;
-    comments.forEach((comment) => this._renderComment(comment));
+  _renderCommentsList() {
+    api.getComments(this._movie.id).then((comments) => {
+      this._commentsModel.setComments(comments);
+      this._counter.textContent = comments.length;
+      comments.forEach((comment) => this._renderComment(comment));
+    });
   }
 
   _renderEmojies() {
