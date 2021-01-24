@@ -1,26 +1,16 @@
-import AbstractView from '../view/abstract.js';
+import Abstract from "../view/abstract";
 
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
-  ARTEREND: `afterend`,
-};
-
-const renderTemplate = (container, template, place) => {
-  if (container instanceof AbstractView) {
-    container = container.getElement();
-  }
-  if (template instanceof AbstractView) {
-    template = template.getElement();
-  }
-  container.insertAdjacentHTML(place, template);
 };
 
 const render = (container, child, place) => {
-  if (container instanceof AbstractView) {
+  if (container instanceof Abstract) {
     container = container.getElement();
   }
-  if (child instanceof AbstractView) {
+
+  if (child instanceof Abstract) {
     child = child.getElement();
   }
   switch (place) {
@@ -40,12 +30,21 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
+// Функция для отрисовки шаблона
+
+const renderTemplate = (container, template, place) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+  container.insertAdjacentHTML(place, template);
+};
+
 const remove = (component) => {
   if (component === null) {
     return;
   }
 
-  if (!(component instanceof AbstractView)) {
+  if (!(component instanceof Abstract)) {
     throw new Error(`Can remove only components`);
   }
   component.getElement().remove();
@@ -53,11 +52,11 @@ const remove = (component) => {
 };
 
 const replace = (newChild, oldChild) => {
-  if (oldChild instanceof AbstractView) {
+  if (oldChild instanceof Abstract) {
     oldChild = oldChild.getElement();
   }
 
-  if (newChild instanceof AbstractView) {
+  if (newChild instanceof Abstract) {
     newChild = newChild.getElement();
   }
 
@@ -70,11 +69,4 @@ const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export {
-  renderTemplate,
-  RenderPosition,
-  render,
-  createElement,
-  remove,
-  replace,
-};
+export {RenderPosition, render, createElement, renderTemplate, remove, replace};

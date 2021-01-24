@@ -1,8 +1,4 @@
-import MoviesModel from './model/movies.js';
-import CommentsModel from './model/comments.js';
-
-const ENDPOINT = `https://13.ecmascript.pages.academy/cinemaddict`;
-const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
+import FilmsModel from "../model/films-model";
 
 const Method = {
   GET: `GET`,
@@ -13,58 +9,65 @@ const Method = {
 
 const SuccessHTTPStatusRange = {
   MIN: 200,
-  MAX: 299,
+  MAX: 299
 };
 
 export default class Api {
-  constructor(endPoint = ENDPOINT, authorization = AUTHORIZATION) {
+  constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
 
-  get movies() {
+  getMovies() {
     return this._load({url: `movies`})
       .then(Api.toJSON)
-      .then((movies) => movies.map(MoviesModel.adaptToClient));
+      .then((movies) => movies.map(FilmsModel.adaptToClient));
   }
 
-  getComments(movieId) {
-    return this._load({url: `comments/${movieId}`})
-      .then(Api.toJSON)
-      .then((comments) => comments);
+  getComments(movie) {
+    return this._load({url: `comments/${movie.id}`})
+    .then(Api.toJSON);
   }
 
-  // set movieId(id) {
-  //   this._movieId = id;
-  // }
 
   updateMovie(movie) {
     return this._load({
       url: `movies/${movie.id}`,
       method: Method.PUT,
-      body: JSON.stringify(MoviesModel.adaptToServer(movie)),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then(Api.toJSON)
-      .then(MoviesModel.adaptToClient);
-  }
-
-  addComment(movieId, movieObject) {
-    return this._load({
-      url: `comments/${movieId}`,
-      method: Method.POST,
-      body: JSON.stringify(movieObject),
+      body: JSON.stringify(FilmsModel.adaptToServer(movie)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON)
-      .then(CommentsModel.adaptToClient);
+      .then(FilmsModel.adaptToClient);
   }
 
-  deleteComment(movieId) {
+  addComment(movie, comment) {
     return this._load({
-      url: `comments/${movieId}`,
+      url: `comments/${movie.id}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then((response) => response.comments);
+
+  }
+
+  deleteComment(id) {
+    return this._load({
+      url: `comments/${id}`,
       method: Method.DELETE
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
   }
 
   _load({
@@ -86,11 +89,10 @@ export default class Api {
   static checkStatus(response) {
     if (
       response.status < SuccessHTTPStatusRange.MIN ||
-      response.status >= SuccessHTTPStatusRange.MAX
+      response.status > SuccessHTTPStatusRange.MAX
     ) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }
-
     return response;
   }
 

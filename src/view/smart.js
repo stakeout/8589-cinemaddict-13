@@ -1,4 +1,4 @@
-import Abstract from './abstract';
+import Abstract from "./abstract";
 
 export default class Smart extends Abstract {
   constructor() {
@@ -6,7 +6,7 @@ export default class Smart extends Abstract {
     this._data = {};
   }
 
-  updateData(update, isOnlyDataUpdating = false) {
+  updateData(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -17,14 +17,15 @@ export default class Smart extends Abstract {
         update
     );
 
-    if (!isOnlyDataUpdating) {
+    if (justDataUpdating) {
       return;
     }
+
     this.updateElement();
   }
 
   updateElement() {
-    let prevElement = this.getElement();
+    const prevElement = this.getElement();
     const parent = prevElement.parentElement;
     this.removeElement();
 
