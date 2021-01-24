@@ -1,48 +1,84 @@
-import {render, RenderPosition} from './utils/render.js';
-import {UpdateType} from './utils/const.js';
-import MainNavContainerView from './view/main-navigation.js';
-import StatsView from './view/stats.js';
-import FooterStatsView from './view/footer-stats.js';
+import ProfilePresenter from "./presenter/profile";
+import FilterPresenter from "./presenter/filter";
+import StatsPresenter from "./presenter/statistic";
+import LocationPresenter from "./presenter/location";
+import FooterPresenter from "./presenter/footer-stats";
 
-import MoviesBoardPresenter from './presenter/movies-list.js';
-import FilterPresenter from './presenter/filter.js';
-import ProfilePresenter from './presenter/profile.js';
+import FilmsModel from "./model/films-model";
+import FilterModel from "./model/filter-model";
+import CommentsModel from "./model/comments-model";
 
-import MoviesModel from './model/movies.js';
-import FilterModel from './model/filter.js';
-// import CommentsModel from './model/comments.js';
+import Api from "./api/api";
+import Store from "./api/store";
+import Provider from "./api/provider";
 
-import Api from './api.js';
+import {UpdateType, MenuStats} from "./consts";
 
-// const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
-// const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+const AUTHORIZATION = `Basic Fb4rl8KmwXun6Vn7p`;
+const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
-const api = new Api();
+const siteBody = document.body;
+const siteHeaderElement = siteBody.querySelector(`.header`);
+const siteMainElement = siteBody.querySelector(`.main`);
+const siteFooterElement = siteBody.querySelector(`.footer`);
 
-const moviesModel = new MoviesModel();
-const filtersModel = new FilterModel();
-// const commentsModel = new CommentsModel();
+let statsPresenter = null;
 
-const headerElement = document.querySelector(`.header`);
-const mainElement = document.querySelector(`.main`);
-const footerStats = document.querySelector(`.footer__statistics`);
+const filmsModel = new FilmsModel();
+const filterModel = new FilterModel();
+const commentsModel = new CommentsModel();
 
-new ProfilePresenter(headerElement, moviesModel).init();
-render(mainElement, new MainNavContainerView(), RenderPosition.BEFOREEND);
-
-const mainNav = mainElement.querySelector(`.main-navigation`);
-
-new FilterPresenter(mainNav, filtersModel, moviesModel).init();
-render(mainNav, new StatsView(), RenderPosition.BEFOREEND);
-
-new MoviesBoardPresenter(mainElement, moviesModel, filtersModel, api).init();
-
-api.movies
-  .then((movies) => {
-    moviesModel.setMovies(UpdateType.INIT, movies);
-    render(footerStats, new FooterStatsView(movies.length), RenderPosition.BEFOREEND);
+apiWithProvider.getMovies()
+  .then((films) => {
+    apiWithProvider.getAllComments()
+    .then(() => {
+      filmsModel.setFilms(UpdateType.INIT, films);
+    });
   })
   .catch(() => {
-    moviesModel.setMovies(UpdateType.INIT, []);
+    filmsModel.setFilms(UpdateType.INIT, []);
   });
 
+const changeMenuState = (action) => {
+
+  switch (action) {
+    case MenuStats.MOVIES:
+      locationPresenter.destroy();
+      locationPresenter.init();
+      if (statsPresenter !== null) {
+        statsPresenter.destroy();
+      }
+      break;
+    case MenuStats.STATISTICS:
+      locationPresenter.destroy();
+      statsPresenter = new StatsPresenter(siteMainElement, filmsModel);
+      statsPresenter.init();
+      break;
+  }
+};
+
+const profilePresenter = new ProfilePresenter(siteHeaderElement, filmsModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel, changeMenuState);
+const locationPresenter = new LocationPresenter(siteMainElement, filmsModel, filterModel, commentsModel, apiWithProvider);
+const footerStatPresenter = new FooterPresenter(siteFooterElement, filmsModel);
+
+profilePresenter.init();
+filterPresenter.init();
+locationPresenter.init();
+footerStatPresenter.init();
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

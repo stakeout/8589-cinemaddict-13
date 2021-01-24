@@ -1,20 +1,24 @@
-import FilterView from '../view/filters.js';
-import {render, RenderPosition, replace, remove} from '../utils/render.js';
-import {filter} from '../utils/filter.js';
-import {FilterType, UpdateType} from '../utils/const.js';
+import FilterView from "../view/site-menu";
+import {render, RenderPosition, replace, remove} from "../utils/render";
+import {filter} from "../utils/filter";
+import {FilterType, UpdateType, MenuStats} from "../consts";
 
 export default class Filter {
-  constructor(filterContainer, filterModel, moviesModel) {
+  constructor(filterContainer, filterModel, filmsModel, changeMenuState) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
-    this._moviesModel = moviesModel;
+    this._filmsModel = filmsModel;
+    this._changeMenuState = changeMenuState;
     this._currentFilter = null;
     this._filterComponent = null;
 
+    this._currentStatusPage = MenuStats.MOVIES;
+
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._handleStatsClick = this._handleStatsClick.bind(this);
 
-    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
@@ -24,8 +28,9 @@ export default class Filter {
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView(filters, this._currentFilter);
+    this._filterComponent = new FilterView(filters, this._currentFilter, this._currentStatusPage);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent.setStatsClickHandler(this._handleStatsClick);
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
@@ -40,39 +45,44 @@ export default class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange({target}) {
-    if (!target.tagName === `A`) {
-      return;
-    }
-    const filterType = target.hash.slice(1);
-
-    if (this._currentFilter === filterType) {
+  _handleFilterTypeChange(filterType) {
+    if (this._currentFilter === filterType && this._currentStatusPage === MenuStats.MOVIES) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this._filterModel.setFilter(UpdateType.MINOR, filterType);
+    this._changeMenuState(MenuStats.MOVIES);
+    this._currentStatusPage = MenuStats.MOVIES;
+    this.init();
   }
 
+  _handleStatsClick() {
+    this._changeMenuState(MenuStats.STATISTICS);
+    this._currentStatusPage = MenuStats.STATISTICS;
+    this.init();
+  }
+
+
   _getFilters() {
-    const movies = this._moviesModel.movies;
+    const films = this._filmsModel.getFilms();
 
     return [
       {
-        name: `All`,
-        count: filter[FilterType.ALL](movies).length
+        name: FilterType.ALL,
       },
       {
-        name: `Watchlist`,
-        count: filter[FilterType.WATCHLIST](movies).length
+        name: FilterType.WATCHLIST,
+        count: filter[FilterType.WATCHLIST](films).length,
       },
       {
-        name: `History`,
-        count: filter[FilterType.HISTORY](movies).length
+        name: FilterType.HISTORY,
+        count: filter[FilterType.HISTORY](films).length,
       },
       {
-        name: `Favorites`,
-        count: filter[FilterType.FAVORITES](movies).length
-      }
+        name: FilterType.FAVORITES,
+        count: filter[FilterType.FAVORITES](films).length,
+      },
+
     ];
   }
 }

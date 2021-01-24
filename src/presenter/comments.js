@@ -1,132 +1,129 @@
-import {nanoid} from 'nanoid';
-import SmartView from '../view/smart.js';
-import CommentView from '../view/comment.js';
-import EmojiesComponent from '../view/add-comment.js';
-import {render, RenderPosition} from '../utils/render.js';
-import {UpdateType, UserAction} from '../utils/const.js';
-
-export default class CommentsPresenter extends SmartView {
-  constructor(commentsWrap, commentsCounter, changeData, commentsModel, popup) {
-    super();
-    this._popupComponent = popup;
-    this._container = commentsWrap;
-    this._commentsCounter = commentsCounter;
+import CommentsSectionView from "../view/comments-section";
+import CommentUserView from "../view/comment-user";
+import MessageUserView from "../view/message-user";
+import {render, RenderPosition, remove, replace} from "../utils/render";
+import {isOnline} from "../utils/helper";
+import {toast} from "../utils/toast";
+import {UserAction, UpdateType} from "../consts";
+const SHAKE_ANIMATION_TIMEOUT = 600;
+export default class Comments {
+  constructor(commentsContainer, changeData, filmsModel, commentsModel, api) {
+    this._commentsContainer = commentsContainer;
     this._changeData = changeData;
-    this._commentsModel = commentsModel; // вместо коментс модели здесь сейчас мувис модель
-    this._emojiesComponent = new EmojiesComponent();
+    this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
+    this._api = api;
 
-    this._handleAddComment = this._handleAddComment.bind(this);
+    this._commentsSectionComponent = null;
+    this._commentUserComponent = null;
+    this._messageUserComponent = null;
+
+    this._renderCommentsBlock = this._renderCommentsBlock.bind(this);
     this._handleDeleteComment = this._handleDeleteComment.bind(this);
-    this._emojiClickHandler = this._emojiClickHandler.bind(this);
-    this._messageInputHandler = this._messageInputHandler.bind(this);
-    this.restoreHandlers = this.restoreHandlers.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    // this._commentsModel.addObserver(this._handleModelEvent);
+    this._handleAddComment = this._handleAddComment.bind(this);
   }
 
-  init(comments) {
-    // this._movie = movie;
-    this._comments = comments.slice();
-    this._commentsCounter.textContent = comments.length;
-    this._renderCommentsList();
-    this._renderEmojies();
-  }
+  init(movie) {
+    this._movie = movie;
+    const prevCommentsSectionComponent = this._commentsSectionComponent;
+    this._commentsSectionComponent = new CommentsSectionView(this._movie);
+    if (prevCommentsSectionComponent === null) {
+      this._renderCommentsBlock();
+      return;
+    }
 
-  _renderComment(comment) {
-    this._commentComponent = new CommentView(comment, this._commentsCounter);
-    render(this._container.querySelector(`.film-details__comments-list`), this._commentComponent, RenderPosition.BEFOREEND);
-    this._commentComponent.setCommentDeleteHandler();
-  }
-
-  _clearCommentsList() {
-    this._popupComponent.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
-  }
-
-  _renderCommentsList() {
-    this._comments.forEach((comment) => this._renderComment(comment));
-  }
-
-  _renderEmojies() {
-    this.restoreHandlers();
-    render(this._container, this._emojiesComponent, RenderPosition.BEFOREEND);
-  }
-
-  _renderEmojiIcon() {
-    const container = this._emojiesComponent.getElement().querySelector(`.film-details__add-emoji-label`);
-    const iconTemplate = `<img src="images/emoji/${this._data.emoji}.png" width="55" height="55" alt="emoji-${this._data.emoji}">`;
-    container.innerHTML = iconTemplate;
-  }
-
-  _handleModelEvent(updateType, updatedMovieObject) {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this._clearCommentsList();
-        this.init(updatedMovieObject);
-        break;
-      case UpdateType.MINOR:
-        break;
+    if (this._commentsContainer.contains(prevCommentsSectionComponent.getElement())) {
+      replace(this._commentsSectionComponent, prevCommentsSectionComponent);
+      this._renderCommentsBlock();
     }
   }
 
-  _emojiClickHandler(evt) {
-    const emoji = evt.target.value;
-    evt.preventDefault();
-    this.updateData({
-      emoji,
-    });
-    if (this._data.emoji) {
-      this._renderEmojiIcon();
+  destroy() {
+    this._commentsContainer = null;
+    remove(this._commentsSectionComponent);
+    if (this._commentUserComponent !== null) {
+      remove(this._commentUserComponent);
+    }
+    remove(this._messageUserComponent);
+  }
+
+  _renderCommentsBlock() {
+    render(this._commentsContainer, this._commentsSectionComponent, RenderPosition.BEFOREEND);
+    const commentsList = this._commentsSectionComponent.getCommentsList();
+    const comments = this._commentsModel.getComments();
+
+    if (this._movie.comments.length) {
+      this._movie.comments.forEach((commentID) => {
+        const index = comments.findIndex((comment) => commentID === comment.id);
+        const comment = comments[index];
+        this._commentUserComponent = new CommentUserView(comment);
+        render(commentsList, this._commentUserComponent, RenderPosition.BEFOREEND);
+        if (comment.deletion === `deletion`) {
+          this.shake(this._commentUserComponent.getElement());
+          comment.deletion = null;
+        }
+        this._commentUserComponent.setCommentDeleteBtnHandler(this._handleDeleteComment);
+      });
+    }
+
+    this._messageUserComponent = new MessageUserView();
+    render(this._commentsSectionComponent, this._messageUserComponent, RenderPosition.BEFOREEND);
+
+    this._messageUserComponent.setFormSubmitHandler(this._handleAddComment);
+    this._messageUserComponent.restoreHandlers();
+  }
+
+  shake(element) {
+    element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      element.style.animation = ``;
+      element.disabled = false;
+      element.focus();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  _handleAddComment() {
+    if (!isOnline()) {
+      toast(`You can't add comment offline`);
+      return;
+    }
+    if (this._messageUserComponent.getNewDate().emotion !== `` && this._messageUserComponent.getNewDate().comment !== ``) {
+      this._messageUserComponent.getMessageUserTextarea().disabled = true;
+      this._api.addComment(this._movie, this._messageUserComponent.getNewDate())
+        .then((response) => {
+          this._commentsModel.setComments(UpdateType.PATCH, response);
+          this._changeData(
+              UserAction.UPDATE_FILM,
+              UpdateType.PATCH,
+              this._movie
+          );
+
+        })
+        .catch(() => {
+          this.shake(this._messageUserComponent.getMessageUserTextarea());
+        });
     }
   }
 
-  _messageInputHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      comment: evt.target.value,
-    });
-  }
-
-  restoreHandlers() {
-    this._emojiesComponent.setEmojiClickHandler(this._emojiClickHandler);
-    this._emojiesComponent.setMessageInputHandler(this._messageInputHandler);
-    this._emojiesComponent.setAddCommentHandler(this._handleAddComment);
-  }
-
-  _handleAddComment(evt) {
-    if (evt.ctrlKey && evt.key === `Enter`) {
-      this._changeData(
-          UserAction.UPDATE,
-          UpdateType.PATCH,
-          Object.assign(
-              {},
-              this._movie,
-              this._movie.comments.unshift(
-                  Object.assign(
-                      {},
-                      this._data,
-                      {
-                        id: nanoid(3),
-                        author: `Vadim`,
-                        dateCreation: new Date()
-                      }
-                  )
-              )
-          ));
-    }
-  }
 
   _handleDeleteComment() {
-    this._changeData(
-        UserAction.DELETE_COMMENT,
-        UpdateType.PATCH,
-        Object.assign(
-            {},
-            this._movie,
-            {
-              isWatched: !this._movie.isWatched
-            }
-        )
-    );
+    if (!isOnline()) {
+      toast(`You can't delete comment offline`);
+      return;
+    }
+    const comments = this._commentsModel.getComments();
+    const index = comments.findIndex((comment) => comment.delete);
+    this._api.deleteComment(comments[index].id)
+        .then(() => {
+          this._commentsModel.deleteComment(comments[index].id);
+          this._changeData(
+              UserAction.UPDATE_FILM,
+              UpdateType.PATCH,
+              this._movie
+          );
+        })
+        .catch(() => {
+          this.shake(this._commentUserComponent.getCommentText());
+        });
   }
 }

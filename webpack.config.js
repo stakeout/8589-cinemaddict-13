@@ -1,27 +1,16 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const isProd = process.env.NODE_ENV === 'production';
-const isDev = !isProd;
 
 module.exports = {
-  mode: 'development',
-  entry: './src/main.js',
+  mode: 'development',  // режим разработки
+  entry: './src/main.js', // точка входа
   output: {
-    filename: 'bundle.js',
-    path: path.join(__dirname, 'public'),
+    filename: 'bundle.js', // файл сборки
+    path: path.resolve(__dirname, 'public'), // директория для сборки
   },
-  devtool: isDev ? 'source-map' : false,
+  devtool: 'source-map',
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
-    watchContentBase: true,
-    port: 3003,
-    hot: isDev,
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
-      minify: false
-    }),
-  ],
+    contentBase: path.resolve(__dirname, 'public'),
+    watchContentBase: true, // слежка, чтобы не обновлять страницу руками
+    port: 3030,
+  }
 };

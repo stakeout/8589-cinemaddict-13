@@ -1,30 +1,25 @@
-import ProfileView from '../view/profile.js';
-import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import ProfileView from "../view/profile";
+import {render, replace, remove, RenderPosition} from '../utils/render';
 
 export default class Profile {
-  constructor(container, moviesModel) {
-    this._container = container;
-    this._moviesModel = moviesModel;
+  constructor(profileContainer, filmsModel) {
+    this._profileContainer = profileContainer;
+    this._filmsModel = filmsModel;
     this._profileComponent = null;
-
     this._handleModelEvent = this._handleModelEvent.bind(this);
-
-    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    const count = this._moviesModel.movies.filter((element) => element.isWatched).length;
-    this._prevProfileComponent = this._profileComponent;
-    this._profileComponent = new ProfileView(count);
+    const prevProfileComponent = this._profileComponent;
+    this._profileComponent = new ProfileView(this._filmsModel.getFilms());
 
-    if (this._prevProfileComponent === null) {
-      render(this._container, this._profileComponent, RenderPosition.BEFOREEND);
+    if (prevProfileComponent === null) {
+      render(this._profileContainer, this._profileComponent, RenderPosition.BEFOREEND);
       return;
     }
-    if (this._container.contains(this._prevProfileComponent.getElement())) {
-      replace(this._profileComponent.getElement(), this._prevProfileComponent.getElement());
-    }
-    remove(this._prevProfileComponent);
+    replace(this._profileComponent, prevProfileComponent);
+    remove(prevProfileComponent);
   }
 
   _handleModelEvent() {

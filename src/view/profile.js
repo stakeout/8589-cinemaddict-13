@@ -1,35 +1,27 @@
-const showUserStatus = (num) => {
-  if (num === 0) {
-    return false;
-  } else if (num <= 10) {
-    return `Novice`;
-  } else if (num <= 20) {
-    return `Fan`;
-  } else {
-    return `Movie Buff`;
-  }
-};
+import AbstractView from "./abstract";
+import {filter} from "../utils/filter";
+import {FilterType} from "../consts";
+import {getUserStatus} from "../utils/helper";
 
-import AbstractView from './abstract.js';
 
-const createProfileTemplate = (historyCount) => {
-  const isUserRating = showUserStatus(historyCount);
-
+const createProfileTemplate = (movies) => {
+  const historyCount = filter[FilterType.HISTORY](movies).length;
+  const userStatus = getUserStatus(historyCount);
   return `
     <section class="header__profile profile">
-      ${isUserRating ? `<p class="profile__rating">${isUserRating}</p>` : ``}
+      ${historyCount ? `<p class="profile__rating">${userStatus}</p>` : ``}
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>
   `.trim();
 };
 
-export default class UserProfile extends AbstractView {
-  constructor(whatchedFilmsCount) {
+export default class Profile extends AbstractView {
+  constructor(movies) {
     super();
-    this._whatchedFilmsCount = whatchedFilmsCount;
+    this._movies = movies;
   }
 
-  _getTemplate() {
-    return createProfileTemplate(this._whatchedFilmsCount);
+  getTemplate() {
+    return createProfileTemplate(this._movies);
   }
 }
