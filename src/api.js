@@ -1,4 +1,8 @@
-import MoviesModel from "./model/movies.js";
+import MoviesModel from './model/movies.js';
+import CommentsModel from './model/comments.js';
+
+const ENDPOINT = `https://13.ecmascript.pages.academy/cinemaddict`;
+const AUTHORIZATION = `Basic fgh7et5kb90ga8`;
 
 const Method = {
   GET: `GET`,
@@ -9,16 +13,11 @@ const Method = {
 
 const SuccessHTTPStatusRange = {
   MIN: 200,
-  MAX: 299
-};
-
-const serverUrl = {
-  URL: `https://13.ecmascript.pages.academy/cinemaddict`,
-  AUTH: `Basic fgh7et5kb90ga8`,
+  MAX: 299,
 };
 
 export default class Api {
-  constructor(endPoint = serverUrl.URL, authorization = serverUrl.AUTH) {
+  constructor(endPoint = ENDPOINT, authorization = AUTHORIZATION) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
@@ -29,15 +28,15 @@ export default class Api {
       .then((movies) => movies.map(MoviesModel.adaptToClient));
   }
 
-  get comments() {
-    return this._load({url: `comments/${this._movieId}`})
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
       .then(Api.toJSON)
       .then((comments) => comments);
   }
 
-  set movieId(id) {
-    this._movieId = id;
-  }
+  // set movieId(id) {
+  //   this._movieId = id;
+  // }
 
   updateMovie(movie) {
     return this._load({
@@ -48,6 +47,24 @@ export default class Api {
     })
       .then(Api.toJSON)
       .then(MoviesModel.adaptToClient);
+  }
+
+  addComment(movieId, movieObject) {
+    return this._load({
+      url: `comments/${movieId}`,
+      method: Method.POST,
+      body: JSON.stringify(movieObject),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then(CommentsModel.adaptToClient);
+  }
+
+  deleteComment(movieId) {
+    return this._load({
+      url: `comments/${movieId}`,
+      method: Method.DELETE
+    });
   }
 
   _load({

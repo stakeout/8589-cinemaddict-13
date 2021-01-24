@@ -36,8 +36,8 @@ class Movie {
   }
 
   _handlePopupOpenClick() {
-    const popupPresenter = new PopupPresenter(this._moviesModel, this._commentsModel);
-    popupPresenter.init(this._movie, this._changeData);
+    const popupPresenter = new PopupPresenter(this._movie, this._changeData, this._moviesModel, this._commentsModel);
+    popupPresenter.init();
   }
 
   _setMovieCardHandlers() {

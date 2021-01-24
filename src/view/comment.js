@@ -1,9 +1,9 @@
 import AbstractView from './abstract.js';
-import {remove} from '../utils/render.js';
+// import {remove} from '../utils/render.js';
 import {dayjs} from '../utils/common.js';
 
 const createCommentItemTemplate = (commentItem) => {
-  const {author, emotion, date, comment} = commentItem;
+  const {id, author, emotion, date, comment} = commentItem;
   return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -14,7 +14,7 @@ const createCommentItemTemplate = (commentItem) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-id=${id}>Delete</button>
         </p>
       </div>
     </li>
@@ -22,10 +22,9 @@ const createCommentItemTemplate = (commentItem) => {
 };
 
 export default class Comment extends AbstractView {
-  constructor(comment, counter) {
+  constructor(comment) {
     super();
     this._comment = comment;
-    this._commentsCounter = counter;
     this._deleteHandler = this._deleteHandler.bind(this);
   }
 
@@ -35,12 +34,11 @@ export default class Comment extends AbstractView {
 
   _deleteHandler(evt) {
     evt.preventDefault();
-    remove(this);
-    this._commentsCounter.textContent -= 1;
+    this._callback.deleteComment(evt);
   }
 
   setCommentDeleteHandler(cb) {
-    this._callback.deleteClick = cb;
+    this._callback.deleteComment = cb;
     this.getElement()
         .querySelector(`.film-details__comment-delete`)
         .addEventListener(`click`, this._deleteHandler);

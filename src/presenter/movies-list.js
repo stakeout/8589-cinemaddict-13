@@ -15,6 +15,7 @@ import MoviePresenter from './movie.js';
 import {sortMoviesByDate, sortMoviesByRating} from '../utils/common.js';
 import {SortType, UpdateType, UserAction} from '../utils/const.js';
 import {filter} from "../utils/filter.js";
+import CommentsModel from '../model/comments.js';
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_EXTRA_AMOUNT = 2;
@@ -30,6 +31,8 @@ export default class MoviesList {
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
     this._isLoading = true;
+    this._commentsModel = new CommentsModel();
+    this._commentsModel.movies = moviesModel.movies;
 
     this._fimsContainerComponent = new FilmsContainerView();
     this._allMoviesComponent = new AllMoviesView();
@@ -48,6 +51,8 @@ export default class MoviesList {
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
+
   }
 
   init() {
@@ -77,10 +82,14 @@ export default class MoviesList {
         });
         break;
       case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, updatedObject);
+        this._api.addComment(updatedObject.id, updatedObject).then((response) => {
+          this._commentsModel.addComment(updateType, response);
+        });
         break;
       case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, updatedObject);
+        this._api.deleteComment(updatedObject).then(() => {
+          this._commentsModel.deleteComment(updateType);
+        });
         break;
     }
   }
@@ -163,6 +172,7 @@ export default class MoviesList {
   }
 
   _renderLoading() {
+    render(this._containerElement, this._fimsContainerComponent, RenderPosition.BEFOREEND);
     render(this._fimsContainerComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
