@@ -13,8 +13,6 @@ import MostCommentedPresenter from "./most-commented";
 import {sortDate, sortRating} from "../utils/helper";
 import {SortType, UpdateType, UserAction, FilmCount, FilmListHeader} from "../consts";
 
-// const CARDS_COUNT_PER_STEP = 5;
-
 export default class Location {
   constructor(locationContainer, filmsModel, filterModel, commentsModel, api) {
     this._locationContainer = locationContainer;
@@ -144,7 +142,6 @@ export default class Location {
         }
         this._renderTopRated();
         this._renderMostCommented();
-        // this._moviePresenter[data.id].init(data);
         break;
 
       case UpdateType.MINOR:
