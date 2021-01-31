@@ -135,13 +135,9 @@ export default class Location {
   _handleModelEvent(updateType, updatedMovie) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._destroyTopRatedPresenter();
-        this._destroyMostCommentedPresenter();
         if (this._moviePresenter[updatedMovie.id] !== undefined) {
           this._moviePresenter[updatedMovie.id].init(updatedMovie);
         }
-        this._renderTopRated();
-        this._renderMostCommented();
         break;
 
       case UpdateType.MINOR:
