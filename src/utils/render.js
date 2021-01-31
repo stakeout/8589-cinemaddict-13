@@ -30,15 +30,6 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-// Функция для отрисовки шаблона
-
-const renderTemplate = (container, template, place) => {
-  if (container instanceof Abstract) {
-    container = container.getElement();
-  }
-  container.insertAdjacentHTML(place, template);
-};
-
 const remove = (component) => {
   if (component === null) {
     return;
@@ -69,4 +60,4 @@ const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export {RenderPosition, render, createElement, renderTemplate, remove, replace};
+export {RenderPosition, render, createElement, remove, replace};

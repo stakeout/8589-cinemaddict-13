@@ -22,7 +22,7 @@ export default class Location {
     this._renderedCardCount = FilmCount.PER_STEP;
     this._moviePresenter = {};
     this._topRatedPresenter = null;
-    this._mostCommentedPresentr = null;
+    this._mostCommentedPresenter = null;
     this._currentSortType = SortType.DEFAULT;
     this._isLoading = true;
     this._api = api;

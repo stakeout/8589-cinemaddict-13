@@ -1,16 +1,16 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',  // режим разработки
-  entry: './src/main.js', // точка входа
+  mode: 'development',
+  entry: './src/main.js',
   output: {
-    filename: 'bundle.js', // файл сборки
-    path: path.resolve(__dirname, 'public'), // директория для сборки
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public'),
   },
   devtool: 'source-map',
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
-    watchContentBase: true, // слежка, чтобы не обновлять страницу руками
-    port: 3030,
+    watchContentBase: true,
+    port: 3003,
   }
 };

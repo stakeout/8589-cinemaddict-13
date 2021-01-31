@@ -61,7 +61,7 @@ export default class MessageUser extends SmartView {
   }
 
   getMessageUserTextarea() {
-    return this.getElement().querySelector(`.film-details__comment-input`);
+    return this.getElement();
   }
 
   _commentInputHandler(evt) {

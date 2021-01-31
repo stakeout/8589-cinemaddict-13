@@ -93,7 +93,7 @@ export default class Movie {
   }
 
   _renderCommentSection(movie) {
-    this._commentsPresenter = new CommentsPresenter(this._commentsContainer, this._handleViewAction, this._filmsModel, this._commentsModel, this._api);
+    this._commentsPresenter = new CommentsPresenter(this._commentsContainer, this._handleViewAction, this._commentsModel, this._api);
     this._commentsPresenter.init(movie);
   }
 
