@@ -180,10 +180,10 @@ export default class Movie {
             {},
             this._movie,
             {
-              isWatchlist: !this._movie.isWatchlist
+              isWatchlist: !this._movie.isWatchlist,
             }
         ),
-        FilterType.WATCHLIST,
+        FilterType.WATCHLIST
     );
     this._deleteHideOverflow(FilterType.WATCHLIST);
   }
@@ -200,7 +200,7 @@ export default class Movie {
               watchingDate: this._movie.watchingDate !== null ? null : dayjs().toDate(),
             }
         ),
-        FilterType.HISTORY,
+        FilterType.HISTORY
     );
     this._deleteHideOverflow(FilterType.HISTORY);
   }
@@ -216,7 +216,7 @@ export default class Movie {
               isFavorites: !this._movie.isFavorites
             }
         ),
-        FilterType.FAVORITES,
+        FilterType.FAVORITES
     );
     this._deleteHideOverflow(FilterType.FAVORITES);
   }
