@@ -104,7 +104,7 @@ export default class Location {
   }
 
   _renderFilmsCard(card, containerComponent) {
-    const moviePresenter = new MoviePresenter(containerComponent, this._handleViewAction, this._filmsModel, this._commentsModel, this._api);
+    const moviePresenter = new MoviePresenter(containerComponent, this._handleViewAction, this._filmsModel, this._filterModel, this._commentsModel, this._api);
     moviePresenter.init(card);
     this._moviePresenter[card.id] = moviePresenter;
   }
@@ -122,11 +122,13 @@ export default class Location {
     render(this._filmsListComponent, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, typeFilter) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
+        const newUpdateType = this._filterModel.getFilter() === typeFilter ?
+          UpdateType.MINOR : updateType;
         this._api.updateMovie(update).then((response) => {
-          this._filmsModel.updateFilm(updateType, response);
+          this._filmsModel.updateFilm(newUpdateType, response);
         });
         break;
     }
@@ -135,14 +137,21 @@ export default class Location {
   _handleModelEvent(updateType, updatedMovie) {
     switch (updateType) {
       case UpdateType.PATCH:
+        this._destroyTopRatedPresenter();
+        this._destroyMostCommentedPresenter();
         if (this._moviePresenter[updatedMovie.id] !== undefined) {
           this._moviePresenter[updatedMovie.id].init(updatedMovie);
         }
+        this._renderTopRated();
+        this._renderMostCommented();
         break;
 
       case UpdateType.MINOR:
-        this._destroyTopRatedPresenter();
-        this._destroyMostCommentedPresenter();
+        this._clearLocation();
+        this._renderLocation();
+        break;
+
+      case UpdateType.MAJOR:
         this._clearLocation({resetRenderedFilmCount: true, resetSortType: true});
         this._renderLocation();
         break;
@@ -201,9 +210,9 @@ export default class Location {
     this._destroyTopRatedPresenter();
     this._destroyMostCommentedPresenter();
     remove(this._sortComponent);
-    remove(this._filmsComponent);
-    remove(this._filmsListComponent);
-    remove(this._filmsContainerComponent);
+    // remove(this._filmsComponent);
+    // remove(this._filmsListComponent);
+    // remove(this._filmsContainerComponent);
     remove(this._listEmptyComponent);
     remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);

@@ -51,7 +51,7 @@ export default class FilmsModel extends Observer {
           description: film[`film_info`].description,
           isWatchlist: film[`user_details`].watchlist,
           isWatched: film[`user_details`].already_watched,
-          watchingDate: film[`user_details`].watching_date !== null ? new Date(film[`user_details`].watching_date) : null,
+          watchingDate: film[`user_details`].watching_date !== null ? new Date(film[`user_details`].watching_date) : new Date(),
           isFavorites: film[`user_details`].favorite,
 
         }
@@ -110,6 +110,7 @@ export default class FilmsModel extends Observer {
     delete adaptedFilm.description;
     delete adaptedFilm.isWatchlist;
     delete adaptedFilm.isWatched;
+    delete adaptedFilm.watchingDate;
     delete adaptedFilm.isFavorites;
 
     return adaptedFilm;

@@ -12,7 +12,7 @@ import Api from "./api";
 
 import {UpdateType, MenuStats} from "./consts";
 
-const AUTHORIZATION = `Basic Fb4rl8KmwXun6Vn7p`;
+const AUTHORIZATION = `Basic gr8rl7hDwXun6Vn3L`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -47,7 +47,11 @@ const changeMenuState = (action) => {
       break;
     case MenuStats.STATISTICS:
       locationPresenter.destroy();
+      if (statsPresenter !== null) {
+        statsPresenter.destroy();
+      }
       statsPresenter = new StatsPresenter(siteMainElement, filmsModel);
+
       statsPresenter.init();
       break;
   }

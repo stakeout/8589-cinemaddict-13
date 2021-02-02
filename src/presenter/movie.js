@@ -3,14 +3,16 @@ import PopupView from "../view/popup";
 import {render, RenderPosition, remove, replace} from "../utils/render";
 import {isEscapeEvent} from "../utils/helper";
 import CommentsPresenter from "./comments";
-import {UserAction, UpdateType} from "../consts";
+import {UserAction, UpdateType, FilterType} from "../consts";
+import dayjs from "dayjs";
 
 
 export default class Movie {
-  constructor(movieContainer, changeData, filmsModel, commentsModel, api) {
+  constructor(movieContainer, changeData, filmsModel, filterModel, commentsModel, api) {
     this._movieContainer = movieContainer;
     this._changeData = changeData;
     this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._api = api;
     this._commentsModel = commentsModel;
 
@@ -26,6 +28,7 @@ export default class Movie {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._deleteHideOverflow = this._deleteHideOverflow.bind(this);
 
     this._destroyCommentPresenter = this._destroyCommentPresenter.bind(this);
 
@@ -162,6 +165,13 @@ export default class Movie {
     this._popupComponent.setFavoriteClickHandler(this._handleFavoriteClick);
   }
 
+  _deleteHideOverflow(typeFilter) {
+    if (document.body.classList.contains(`hide-overflow`) && this._filterModel.getFilter() === typeFilter) {
+      document.body.classList.remove(`hide-overflow`);
+      this._destroyCommentPresenter();
+    }
+  }
+
   _handleWatchlistClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
@@ -172,9 +182,10 @@ export default class Movie {
             {
               isWatchlist: !this._movie.isWatchlist
             }
-        )
-
+        ),
+        FilterType.WATCHLIST,
     );
+    this._deleteHideOverflow(FilterType.WATCHLIST);
   }
 
   _handleWatchedClick() {
@@ -186,10 +197,12 @@ export default class Movie {
             this._movie,
             {
               isWatched: !this._movie.isWatched,
-              watchingDate: new Date(),
+              watchingDate: this._movie.watchingDate !== null ? null : dayjs().toDate(),
             }
-        )
+        ),
+        FilterType.HISTORY,
     );
+    this._deleteHideOverflow(FilterType.HISTORY);
   }
 
   _handleFavoriteClick() {
@@ -202,8 +215,9 @@ export default class Movie {
             {
               isFavorites: !this._movie.isFavorites
             }
-        )
+        ),
+        FilterType.FAVORITES,
     );
-
+    this._deleteHideOverflow(FilterType.FAVORITES);
   }
 }

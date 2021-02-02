@@ -6,7 +6,7 @@ const createCommentUserTemplate = (message) => {
 
   const commentDate = helpersDate.releaseCommentDate(date);
   return `
-    <li class="film-details__comment" data-date="${date}">
+    <li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
