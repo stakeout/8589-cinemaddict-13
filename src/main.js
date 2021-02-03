@@ -12,7 +12,7 @@ import Api from "./api";
 
 import {UpdateType, MenuStats} from "./consts";
 
-const AUTHORIZATION = `Basic gr8rl7hDwXun6Vn3L`;
+const AUTHORIZATION = `Basic gr8Kl7hDwXun6Vn3L`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 const api = new Api(END_POINT, AUTHORIZATION);
 

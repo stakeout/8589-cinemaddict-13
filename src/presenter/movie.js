@@ -64,6 +64,7 @@ export default class Movie {
       replace(this._popupComponent, prevPopupComponent);
       replace(this._commentsContainer, this._popupComponent.getCommentSectionContainer());
       this._popupComponent.setPopupCloseBtnHandler(this._handleClosePopupBtnClick);
+      this._setScrollPosition();
     }
 
     remove(prevMovieComponent);
@@ -172,7 +173,16 @@ export default class Movie {
     }
   }
 
+  _getScrollPosition() {
+    this._scrollPosition = this._popupComponent.getElement().scrollTop;
+  }
+
+  _setScrollPosition() {
+    this._popupComponent.getElement().scrollTo(0, this._scrollPosition);
+  }
+
   _handleWatchlistClick() {
+    this._getScrollPosition();
     this._changeData(
         UserAction.UPDATE_FILM,
         UpdateType.PATCH,
@@ -189,6 +199,7 @@ export default class Movie {
   }
 
   _handleWatchedClick() {
+    this._getScrollPosition();
     this._changeData(
         UserAction.UPDATE_FILM,
         UpdateType.PATCH,
@@ -206,6 +217,7 @@ export default class Movie {
   }
 
   _handleFavoriteClick() {
+    this._getScrollPosition();
     this._changeData(
         UserAction.UPDATE_FILM,
         UpdateType.PATCH,

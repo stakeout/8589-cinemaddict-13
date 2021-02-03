@@ -61,7 +61,12 @@ export default class MessageUser extends SmartView {
   }
 
   getMessageUserTextarea() {
-    return this.getElement();
+    return this.getElement().querySelector(`.film-details__comment-input`);
+  }
+
+  getEmojiInput() {
+    const listEmojies = [...this.getElement().querySelectorAll(`.film-details__emoji-item`)];
+    return listEmojies;
   }
 
   _commentInputHandler(evt) {

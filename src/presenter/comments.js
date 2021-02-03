@@ -84,6 +84,10 @@ export default class Comments {
   _handleAddComment() {
     if (this._messageUserComponent.getNewDate().emotion !== `` && this._messageUserComponent.getNewDate().comment !== ``) {
       this._messageUserComponent.getMessageUserTextarea().disabled = true;
+      const listEmotions = this._messageUserComponent.getEmojiInput();
+      listEmotions.forEach((item) => {
+        item.disabled = true;
+      });
       this._api.addComment(this._movie, this._messageUserComponent.getNewDate())
         .then((response) => {
           this._commentsModel.setComments(UpdateType.PATCH, response);

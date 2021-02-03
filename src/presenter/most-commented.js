@@ -62,7 +62,7 @@ export default class MostCommented {
   }
 
   _renderMovie(movie) {
-    const moviePresenter = new MoviePresenter(this._filmsContainerComponent, this._handleViewAction, this._filmsModel, this._commentsModel, this._api);
+    const moviePresenter = new MoviePresenter(this._filmsContainerComponent, this._handleViewAction, this._filmsModel, this._filterModel, this._commentsModel, this._api);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
   }

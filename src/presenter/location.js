@@ -28,7 +28,6 @@ export default class Location {
     this._api = api;
     this._sortComponent = null;
     this._filmsComponent = new FilmsView();
-
     this._filmsListComponent = new FilmsListView(FilmListHeader.ALL_MOVIES);
     this._filmsContainerComponent = new FilmsContainerView();
     this._listEmptyComponent = new ListEmptyView(FilmListHeader.NO_MOVIES);
